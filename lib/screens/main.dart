@@ -106,7 +106,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "BottomNavigationBar",
+            "",
             style: TextStyle(color: Colors_.grayscaleWhite)
         ),
         backgroundColor: Colors_.primary,

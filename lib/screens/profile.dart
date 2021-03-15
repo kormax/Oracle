@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:data/constants.dart";
+import "package:data/widgets/divider.dart";
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -39,7 +40,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
             Card(
-              margin: EdgeInsets.all(8),
+                margin: EdgeInsets.only(top: 16, left: 16, right: 16),
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
+                color: Colors_.primaryLightest,
+                child: Column(children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child:ListTile(
+                      onTap: () {},
+                      title: Text(
+                        "NTUU \"KPI\"",
+                        style: TextStyle(
+                          color: Colors_.grayscaleDarkest,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                          backgroundImage: AssetImage("organisation_profile_picture.png")//NetworkImage(avatars[0]),
+                      ),
+                      trailing: Icon(
+                        Icons.edit,
+                        color: Colors_.grayscaleDarkest,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors_.grayscaleWhite,
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8),bottomRight: Radius.circular(8) ),
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          leading: Icon(
+                            Icons.badge,
+                            color: Colors_.primary,
+                          ),
+                          title: Text("Change Organization"),
+                          trailing: Icon(Icons.keyboard_arrow_right),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  )]
+                )
+            ),
+            Card(
+              margin: EdgeInsets.all(16),
               elevation: 4.0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -47,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: Colors_.primary,
               child: Column(children: [
                 Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 child:ListTile(
                   onTap: () {},
                   title: Text(
@@ -58,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   leading: CircleAvatar(
-                      backgroundImage: AssetImage("/assets/profile_picture.png",)//NetworkImage(avatars[0]),
+                      backgroundImage: AssetImage("user_profile_picture.png")//NetworkImage(avatars[0]),
                   ),
                   trailing: Icon(
                     Icons.edit,
@@ -82,26 +132,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         trailing: Icon(Icons.keyboard_arrow_right),
                         onTap: () {},
                       ),
-                      _buildDivider(),
+                      Divider(height: 0,),
                       ListTile(
                         leading: Icon(
                           Icons.language,
                           color: Colors_.primary,
                         ),
-                        title: Text("Change Location"),
+                        title: Text("Change Locale"),
                         trailing: Icon(Icons.keyboard_arrow_right),
                         onTap: () {},
                       ),
-                      _buildDivider(),
-                      ListTile(
-                        leading: Icon(
-                          Icons.badge,
-                          color: Colors_.primary,
-                        ),
-                        title: Text("Change Organization"),
-                        trailing: Icon(Icons.keyboard_arrow_right),
-                        onTap: () {},
-                      ),
+
                     ],
                   ),
               )]
@@ -114,14 +155,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Container _buildDivider() {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-      ),
-      width: double.infinity,
-      height: 1.0,
-      color: Colors.grey.shade400,
-    );
-  }
 }

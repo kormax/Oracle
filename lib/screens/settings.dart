@@ -39,86 +39,166 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  "Notification Settings",
-                  style: TextStyle(
-                    fontSize: 28,
-                    height: 40/28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors_.primary,
+
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                  child: Text(
+                    "Notification Settings",
+                    style: TextStyle(
+                      fontSize: 28,
+                      height: 40/28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors_.grayscaleDarkest,
+                    ),),
+                ),
+
+
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: Container(
+                    width: double.infinity,
+                    //padding: EdgeInsets.all(8),
+
+                    child: Column(children:[
+
+                      ListTile(title:Text(
+
+                        "Send notification when task is:",
+                        style: TextStyle(
+                          fontSize: 22,
+                          height: 24/22,
+                          fontWeight: FontWeight.normal,
+                          color: Colors_.grayscaleDarkest,
+                        ),
+                      )),
+
+                      Divider(height: 0,),
+                      SwitchListTile(
+                        activeColor: Colors_.primary,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        value: true,
+                        title: Text("Assigned"),
+                        onChanged: (val) {},
+                      ),
+
+                      Divider(height: 0,),
+                      SwitchListTile(
+                        activeColor:  Colors_.primary,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        value: false,
+                        title: Text("Cancelled"),
+                        onChanged: null,
+                      ),
+                      Divider(height: 0,),
+                      SwitchListTile(
+                        activeColor: Colors_.primary,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        value: true,
+                        title: Text("Updated"),
+                        onChanged: (val) {},
+                      ),
+                      Divider(height: 0,),
+                      SwitchListTile(
+                        activeColor:  Colors_.primary,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        value: true,
+                        title: Text("Expiring"),
+                        onChanged: null,
+                      ),
+                    ])
                   ),
                 ),
-                SizedBox(height: 24),
-                Text(
-                  "Send notification when task is:",
-                  style: TextStyle(
-                    fontSize: 22,
-                    height: 24/22,
-                    fontWeight: FontWeight.normal,
-                    color: Colors_.grayscaleDarkest,
-                  ),
-                ),
+
+
                 SizedBox(height: 8),
-                SwitchListTile(
-                  activeColor: Colors_.primary,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Assigned"),
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  activeColor:  Colors_.primary,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: false,
-                  title: Text("Cancelled"),
-                  onChanged: null,
-                ),
-                SwitchListTile(
-                  activeColor: Colors_.primary,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Updated"),
-                  onChanged: (val) {},
-                ),
-                SwitchListTile(
-                  activeColor:  Colors_.primary,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Expiring"),
-                  onChanged: null,
-                ),
-                SizedBox(height: 24),
-                Text(
-                  "Send notification in case of:",
-                  style: TextStyle(
-                    fontSize: 22,
-                    height: 24/22,
-                    fontWeight: FontWeight.normal,
-                    color: Colors_.grayscaleDarkest,
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: Container(
+                      width: double.infinity,
+                      //padding: EdgeInsets.all(8),
+
+                      child: Column(children:[
+
+                        ListTile(title:
+                        Text(
+                          "Send notification in case of:",
+                          style: TextStyle(
+                            fontSize: 22,
+                            height: 24/22,
+                            fontWeight: FontWeight.normal,
+                            color: Colors_.grayscaleDarkest,
+                          ),
+                        ),),
+
+                        Divider(height: 0,),
+                        SwitchListTile(
+                          activeColor: Colors_.primary,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          value: true,
+                          title: Text("High priority risks"),
+                          onChanged: (val) {},
+                        ),
+                        Divider(height: 0,),
+                        SwitchListTile(
+                          activeColor: Colors_.primary,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          value: true,
+                          title: Text("Medium priority risks"),
+                          onChanged: (val) {},
+                        ),
+                        Divider(height: 0,),
+                        SwitchListTile(
+                          activeColor: Colors_.primary,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          value: true,
+                          title: Text("Low priority risks"),
+                          onChanged: (val) {},
+                        ),
+                      ])
                   ),
                 ),
-                SizedBox(height: 8),
-                SwitchListTile(
-                  activeColor: Colors_.primary,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("High priority risks"),
-                  onChanged: (val) {},
+
+                SizedBox(height: 24),
+
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                  child: Text(
+                    "Other",
+                    style: TextStyle(
+                      fontSize: 28,
+                      height: 40/28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors_.grayscaleDarkest,
+                    ),),
                 ),
-                SwitchListTile(
-                  activeColor: Colors_.primary,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Medium priority risks"),
-                  onChanged: (val) {},
+
+                Card(
+                  child: Container(
+                      width: double.infinity,
+                      //padding: EdgeInsets.all(8),
+
+                      child: Column(children:[
+
+                        ListTile(title:
+                        Text(
+                          "Licenses",
+                          style: TextStyle(
+                            fontSize: 22,
+                            height: 24/22,
+                            fontWeight: FontWeight.normal,
+                            color: Colors_.grayscaleDarkest,
+                          ),
+                        ),),
+
+                        Divider(height: 0,),
+                        AboutListTile(child: Text("Credits"), applicationName: "Oracle app", applicationVersion: "0.0.0",),
+
+                      ])
+                  ),
                 ),
-                SwitchListTile(
-                  activeColor: Colors_.primary,
-                  contentPadding: const EdgeInsets.all(0),
-                  value: true,
-                  title: Text("Low priority risks"),
-                  onChanged: (val) {},
-                ),
+
 
               ],
             ),

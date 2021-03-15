@@ -22,12 +22,12 @@ class Button extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         child: MaterialButton(
           elevation: 50,
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           color: color,
           onPressed: onPressed,
           child: Text(
             text,
-            style: TextStyle(color: textColor),
+            style: TextStyle(color: textColor, fontSize: 16, height: 24/16),
           ),
         ),
       ),
