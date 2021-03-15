@@ -75,7 +75,7 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
               Container(
                   margin: EdgeInsets.symmetric(vertical: 16),
                   child: Button(
-                    text: "Create task",
+                    text: "Save",
                     color: Colors_.primaryNormal,
                     textColor: Colors_.grayscaleWhite,
                     onPressed: () => Navigator.pop(context),
