@@ -1,4 +1,4 @@
-import 'package:data/constants/colors.dart';
+import 'package:data/constants.dart';
 import 'package:data/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,10 +20,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: SizedBox(
+          height: size.height,
+          child: Column(
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: size.height * 0.05),
             SvgPicture.asset(
                 "assets/logo.svg",
                 height: size.height * 0.10,
@@ -32,23 +33,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 color: Colors_.primary
             ),
             Text(
-              "Welcome screen",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              "Welcome",
+              style: Text_.heading1
             ),
 
-            SizedBox(height: size.height * 0.45),
+            Spacer(),
 
 
-            Center(
-                child: Button(
-                  text: "Login",
-                  color: Colors_.primaryNormal,
-                  textColor: Colors_.grayscaleWhite,
-                  onPressed: () => Navigator.pushNamed(context, "/login"),
-                )
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: size.width * 0.1, vertical: 8),
+              width: size.width * 0.8,
+              child: Button(
+              text: "Login",
+              color: Colors_.primaryNormal,
+              textColor: Colors_.grayscaleWhite,
+              onPressed: () => Navigator.pushNamed(context, "/login"),
+              )
             ),
 
-            Center(
+
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.1,  vertical: 8),
+                width: size.width * 0.8,
                 child: Button(
                   text: "Signup",
                   color: Colors_.grayscaleWhite,
@@ -57,11 +63,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 )
             ),
 
-            SizedBox(height: size.height * 0.05),
+            SizedBox(height: size.width * 0.1 - 8)
+
 
           ],
         ),
       ),
+      )
     );
   }
 }

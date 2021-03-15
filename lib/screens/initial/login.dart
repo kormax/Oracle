@@ -18,38 +18,56 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    double margin = size.width * 0.1;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: size.height * 0.15),
+        body: SingleChildScrollView(
+        child: SizedBox(
+          height: size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: margin),
 
-            Text(
-              "Login",
-              style: TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                    "Login",
+                    style: Text_.heading1
+                ),
+
+                Spacer(),
+
+                EntryField(label: "Login", type: EntryFieldType.plaintext),
+                EntryField(label: "Password", type: EntryFieldType.password),
+
+                Spacer(),
+
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: margin, vertical: 16),
+                    width: size.width - margin * 2,
+                    child: Button(
+                      text: "Login",
+                      color: Colors_.primaryNormal,
+                      textColor: Colors_.grayscaleWhite,
+                      onPressed: () => Navigator.popAndPushNamed(context, "/main"),
+                    )
+                ),
+
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: margin),
+                    width: size.width - margin * 2,
+                    child: Button(
+                      text: "Or signup",
+                      color: Colors_.grayscaleWhite,
+                      textColor: Colors_.primaryNormal,
+                      onPressed: () => Navigator.popAndPushNamed(context, "/signup"),
+                    )
+                ),
+
+                SizedBox(height: margin),
+              ],
             ),
-
-            SizedBox(height: size.height * 0.25),
-
-            EntryField(label: "Login", type: EntryFieldType.plaintext),
-            EntryField(label: "Password", type: EntryFieldType.password),
-            Center(
-              child: Button(
-                text: "Login",
-                color: Colors_.primaryNormal,
-                textColor: Colors_.grayscaleWhite,
-                onPressed: () => Navigator.popAndPushNamed(context, "/main"),
-              )
-            ),
-
-
-            SizedBox(height: size.height * 0.05),
-
-          ],
-        ),
-      ),
+          ),
+        )
     );
   }
 }

@@ -112,7 +112,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         backgroundColor: Colors_.primary,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.message_rounded),
+            icon: const Icon(Icons.supervised_user_circle_outlined),
             tooltip: 'Profile',
             onPressed: () =>
                 Navigator.of(context).pushNamed("/profile"),
