@@ -58,7 +58,9 @@ class _TasksScreenState extends State<TasksScreen> {
           elevation: 0.0,
           child: new Icon(Icons.add, color: Colors_.grayscaleWhite),
           backgroundColor: Colors_.primaryNormal,
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.pushNamed(context, "/task-edit");
+          }),
     );
   }
 }

@@ -2,6 +2,7 @@ import "package:data/constants.dart";
 import 'package:data/screens/initial/signup.dart';
 import 'package:data/screens/profile.dart';
 import 'package:data/screens/settings.dart';
+import 'package:data/screens/tasks/task-editor.dart';
 import 'package:data/screens/tasks/tasks.dart';
 import 'package:data/screens/today.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,8 @@ class MainScreen extends StatelessWidget {
         "/login": (context) => LoginScreen(),
         "/main": (context) => MainNavigationScreen(defaultPage: "today",),
         "/profile": (context) => ProfileScreen(),
-        "/settings": (context) => SettingsScreen()
+        "/settings": (context) => SettingsScreen(),
+        "/task-edit": (context) => TaskEditorScreen(),
       }
     );
   }

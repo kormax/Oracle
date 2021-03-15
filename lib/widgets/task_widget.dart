@@ -17,7 +17,13 @@ class TaskWidget extends StatelessWidget {
     //           child: Text(this.task.name),
     //         )));
     return GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            "/task-edit",
+            arguments: task,
+          );
+        },
         child: Card(
             margin: EdgeInsets.only(left: 16, top: 16, right: 16),
             shape: RoundedRectangleBorder(

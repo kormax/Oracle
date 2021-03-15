@@ -6,7 +6,15 @@ import "package:data/constants.dart";
 class EntryField extends StatelessWidget {
   final String label;
   final EntryFieldType type;
-  EntryField({@required this.label, this.type = EntryFieldType.plaintext});
+  final String value;
+
+  var textController = TextEditingController();
+
+  EntryField({@required this.label, this.type = EntryFieldType.plaintext, this.value = ''}) {
+    if(value != null) {
+      textController.text = value;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +32,7 @@ class EntryField extends StatelessWidget {
             height: 8,
           ),
           TextField(
+              controller: textController,
               obscureText: type == EntryFieldType.password,
               decoration: InputDecoration(
                 border:  OutlineInputBorder(

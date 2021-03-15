@@ -1,14 +1,25 @@
+import 'package:data/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
+  final String datePickerName;
+
+  const DatePicker(this.datePickerName);
+
   @override
-  _DatePickerState createState() => _DatePickerState();
+  _DatePickerState createState() => _DatePickerState(this.datePickerName);
 }
 
 class _DatePickerState extends State<DatePicker> {
   DateTime date = DateTime.now();
+
+  String datePickerName;
+
+  _DatePickerState(name) {
+    datePickerName = name;
+  }
 
   Future _selectDate(BuildContext context) async {
     DateTime picker = await showDatePicker(
@@ -26,28 +37,30 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
+
     return InkWell(
       onTap: () => _selectDate(context),
       child: Container(
-        margin: EdgeInsets.only(left: 32.0, right: 16.0),
-        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
+        height: 58,
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
         decoration: BoxDecoration(
-            color: Color(0x3305756D),
-            borderRadius: BorderRadius.circular(12.0)),
+            border: new Border.all(color: Colors_.grayscaleNeutral, width: 2),
+            borderRadius: BorderRadius.circular(8.0)
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              'BIRTHDAY',
-              style: TextStyle(letterSpacing: 2.0, fontFamily: 'Montserrat'),
+              this.datePickerName ?? 'Date picker',
+              style: TextStyle(fontSize: 16),
             ),
             Text(
               new DateFormat('d MMM y').format(date),
               style: TextStyle(
-                  letterSpacing: 2.0,
+                  fontSize: 16,
                   color: Color(0xff353535),
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'Montserrat'),
+              ),
             )
           ],
         ),
