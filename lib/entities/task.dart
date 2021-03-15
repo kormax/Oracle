@@ -1,5 +1,4 @@
-
-class Task{
+class Task {
   int priority;
   String name;
   String description;
@@ -11,5 +10,12 @@ class Task{
   Task(this.priority, this.name, this.description, this.status, this.dueDate,
       this.completionDate, this.grade);
 
-
+  Task.fromJson(Map<String, dynamic> json)
+      : priority = json['priority'],
+        name = json['name'],
+        description = json['description'],
+        status = json['status'],
+        dueDate = DateTime.parse(json['dueDate']),
+        completionDate = DateTime.parse(json['completionDate']),
+        grade = json['grade'];
 }

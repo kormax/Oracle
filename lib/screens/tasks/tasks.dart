@@ -1,3 +1,5 @@
+import 'package:data/entities/task.dart';
+import 'package:data/services/task_service.dart';
 import 'package:flutter/material.dart';
 
 
@@ -7,10 +9,17 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
+  TaskService taskService;
+  List<Task> tasks;
 
 
   @override
   void initState(){
+    this.taskService = TaskService();
+    this.taskService.getTasks().then((value) {
+      this.tasks=value;
+      print(value);
+    });
     super.initState();
   }
 
