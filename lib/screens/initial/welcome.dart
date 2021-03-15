@@ -47,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               text: "Login",
               color: Colors_.primaryNormal,
               textColor: Colors_.grayscaleWhite,
-              onPressed: () => Navigator.pushNamed(context, "/login"),
+              onPressed: () => Navigator.popAndPushNamed(context, "/login"),
               )
             ),
 
@@ -59,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   text: "Signup",
                   color: Colors_.grayscaleWhite,
                   textColor: Colors_.primaryNormal,
-                  onPressed: () => Navigator.pushNamed(context, "/signup"),
+                  onPressed: () => Navigator.popAndPushNamed(context, "/signup"),
                 )
             ),
 
