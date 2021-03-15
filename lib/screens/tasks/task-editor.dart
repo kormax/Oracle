@@ -39,26 +39,43 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: 16),
-              EntryField(label: "Priority", type: EntryFieldType.integer, value: taskToEdit?.priority?.toString(),),
-              EntryField(label: "Name", type: EntryFieldType.plaintext, value: taskToEdit?.name?.toString(),),
-              EntryField(label: "Description", type: EntryFieldType.plaintext, value: taskToEdit?.description?.toString(),),
-              EntryField(label: "Status", type: EntryFieldType.plaintext, value: taskToEdit?.status?.toString(),),
+              EntryField(
+                label: "Priority",
+                type: EntryFieldType.integer,
+                value: taskToEdit?.priority?.toString(),
+              ),
+              EntryField(
+                label: "Name",
+                type: EntryFieldType.plaintext,
+                value: taskToEdit?.name?.toString(),
+              ),
+              EntryField(
+                label: "Description",
+                type: EntryFieldType.plaintext,
+                value: taskToEdit?.description?.toString(),
+              ),
+              EntryField(
+                label: "Status",
+                type: EntryFieldType.plaintext,
+                value: taskToEdit?.status?.toString(),
+              ),
               SizedBox(height: 16),
               DatePicker("Due date"),
               SizedBox(height: 16),
               DatePicker("Completion date"),
               SizedBox(height: 16),
-              EntryField(label: "Grade", type: EntryFieldType.integer, value: taskToEdit?.grade?.toString(),),
+              EntryField(
+                label: "Grade",
+                type: EntryFieldType.integer,
+                value: taskToEdit?.grade?.toString(),
+              ),
               Container(
-                  margin:
-                      EdgeInsets.symmetric(horizontal: margin, vertical: 16),
-                  width: size.width - margin * 2,
+                  margin: EdgeInsets.symmetric(vertical: 16),
                   child: Button(
                     text: "Create task",
                     color: Colors_.primaryNormal,
                     textColor: Colors_.grayscaleWhite,
-                    onPressed: () =>
-                        Navigator.pop(context),
+                    onPressed: () => Navigator.pop(context),
                   )),
               SizedBox(height: margin),
             ],

@@ -20,7 +20,7 @@ class TaskWidget extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            "/task-edit",
+            "/task-preview",
             arguments: task,
           );
         },
