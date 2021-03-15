@@ -1,3 +1,7 @@
+import 'package:data/entities/user.dart';
+
+import 'note.dart';
+
 class Task {
   int priority;
   String name;
@@ -6,6 +10,8 @@ class Task {
   DateTime dueDate;
   DateTime completionDate;
   double grade;
+  List<User> assignedUsers;
+  List<Note> notes;
 
   Task(this.priority, this.name, this.description, this.status, this.dueDate,
       this.completionDate, this.grade);
