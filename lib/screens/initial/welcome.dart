@@ -19,58 +19,95 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: size.height,
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      if (constraints.maxHeight <= 512) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child:  Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+
+              SizedBox(height: 32,),
+              Text(
+                  "Welcome",
+                  style: Text_.heading1
+              ),
+
+              SvgPicture.asset(
+                  "assets/logo.svg",
+                  height: 128,
+                  width: 128,
+                  semanticsLabel: 'Logo',
+                  color: Colors_.primary
+              ),
+
+
+
+
+              SizedBox(height: 32,),
+              LoginButton(),
+              SizedBox(height: 8,),
+              SignupButton(),
+
+
+
+
+            ],
+          ),
+        );
+      } else {
+        return Container(
+          padding: EdgeInsets.all(16),
           child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-                "assets/logo.svg",
-                height: size.height * 0.10,
-                width: size.height * 0.10,
-                semanticsLabel: 'Logo',
-                color: Colors_.primary
-            ),
-            Text(
-              "Welcome",
-              style: Text_.heading1
-            ),
+            //mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 32,),
 
-            Spacer(),
+              Text(
+                  "Welcome",
+                  style: Text_.heading1
+              ),
+
+              Spacer(flex: 1),
 
 
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: size.width * 0.1, vertical: 8),
-              width: size.width * 0.8,
-              child: Button(
-              text: "Login",
-              color: Colors_.primaryNormal,
-              textColor: Colors_.grayscaleWhite,
-              onPressed: () => Navigator.popAndPushNamed(context, "/login"),
-              )
-            ),
+              Expanded(
+                flex: 3,
+                child: SvgPicture.asset(
+                  "assets/logo.svg",
+                  semanticsLabel: 'Logo',
+                  color: Colors_.primary
+              ),),
+
+              Spacer(flex: 1),
+              LoginButton(),
+              SizedBox(height: 8,),
+              SignupButton(),
 
 
-            Container(
-                margin: EdgeInsets.symmetric(horizontal: size.width * 0.1,  vertical: 8),
-                width: size.width * 0.8,
-                child: Button(
-                  text: "Signup",
-                  color: Colors_.grayscaleWhite,
-                  textColor: Colors_.primaryNormal,
-                  onPressed: () => Navigator.popAndPushNamed(context, "/signup"),
-                )
-            ),
+            ],
+          ),
+        );
+      }
+    })
 
-            SizedBox(height: size.width * 0.1 - 8)
-
-
-          ],
-        ),
-      ),
-      )
     );
   }
+
+  Widget SignupButton() => Button(
+    text: "Signup",
+    color: Colors_.grayscaleWhite,
+    textColor: Colors_.primaryNormal,
+    onPressed: () => Navigator.popAndPushNamed(context, "/signup"),
+  );
+
+  Widget LoginButton() => Button(
+    text: "Login",
+    color: Colors_.primaryNormal,
+    textColor: Colors_.grayscaleWhite,
+    onPressed: () => Navigator.popAndPushNamed(context, "/login"),
+  );
+
 }
 

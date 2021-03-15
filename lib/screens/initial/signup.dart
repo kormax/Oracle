@@ -15,100 +15,87 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double margin = size.width * 0.1;
-
     return Scaffold(
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: margin),
+        body: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxHeight <= 512 + 128) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 32),
 
-                Text(
-                    "Sign up",
-                    style: Text_.heading1
-                ),
+                      Text(
+                          "Sign up",
+                          style: Text_.heading1
+                      ),
 
-                Spacer(),
 
-                EntryField(label: "Login", type: EntryFieldType.plaintext),
-                EntryField(label: "Email", type: EntryFieldType.plaintext),
-                EntryField(label: "Password", type: EntryFieldType.password),
-                EntryField(label: "Retype password", type: EntryFieldType.password),
+                      EntryField(label: "Login", type: EntryFieldType.plaintext),
+                      EntryField(label: "Email", type: EntryFieldType.plaintext),
+                      EntryField(label: "Password", type: EntryFieldType.password),
+                      EntryField(label: "Retype password", type: EntryFieldType.password),
 
-                Spacer(),
 
-                Container(
-                    margin: EdgeInsets.symmetric(horizontal: margin, vertical: 16),
-                    width: size.width - margin * 2,
-                    child: Button(
-                      text: "Signup",
-                      color: Colors_.primaryNormal,
-                      textColor: Colors_.grayscaleWhite,
-                      onPressed: () => Navigator.popAndPushNamed(context, "/main"),
+                      SizedBox(height: 32),
+                      LoginButton(),
+                      SizedBox(height: 8),
+                      SignupButton(),
+
+
+
+
+                    ],
+                  ),
+                );
+              } else {
+                return Container(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 32,),
+                        Text(
+                            "Sign up",
+                            style: Text_.heading1
+                        ),
+
+                        Spacer(),
+
+                        EntryField(label: "Login", type: EntryFieldType.plaintext),
+                        EntryField(label: "Email", type: EntryFieldType.plaintext),
+                        EntryField(label: "Password", type: EntryFieldType.password),
+                        EntryField(label: "Retype password", type: EntryFieldType.password),
+
+                        Spacer(),
+
+                        SignupButton(),
+                        SizedBox(height: 8,),
+                        LoginButton(),
+                      ],
                     )
-                ),
-
-                Container(
-                    margin: EdgeInsets.symmetric(horizontal: margin),
-                    width: size.width - margin * 2,
-                    child: Button(
-                      text: "Or login",
-                      color: Colors_.grayscaleWhite,
-                      textColor: Colors_.primaryNormal,
-                      onPressed: () => Navigator.popAndPushNamed(context, "/login"),
-                    )
-                ),
-
-                SizedBox(height: margin),
-              ],
-            ),
-          ),
+                );
+              }
+            }
         )
     );
   }
-  /*
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
+  Widget SignupButton() => Button(
+    text: "Signup",
+    color: Colors_.primaryNormal,
+    textColor: Colors_.grayscaleWhite,
+    onPressed: () => Navigator.popAndPushNamed(context, "/main"),
+  );
 
+  Widget LoginButton() => Button(
+    text: "Or login",
+    color: Colors_.grayscaleWhite,
+    textColor: Colors_.primaryNormal,
+    onPressed: () => Navigator.popAndPushNamed(context, "/login"),
+  );
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: size.height * 0.15),
-
-            Text(
-              "Sign up",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-
-            SizedBox(height: size.height * 0.15),
-
-            EntryField(label: "Login", type: EntryFieldType.plaintext),
-            EntryField(label: "Email", type: EntryFieldType.plaintext),
-            EntryField(label: "Password", type: EntryFieldType.password),
-            EntryField(label: "Retype password", type: EntryFieldType.password),
-            Center(
-                child: Button(
-                  text: "Sign up",
-                  color: Colors_.primaryNormal,
-                  textColor: Colors_.grayscaleWhite,
-                  onPressed: () => Navigator.popAndPushNamed(context, "/main"),
-                )
-            ),
-            SizedBox(height: size.height * 0.05),
-          ],
-        ),
-      ),
-    );
-  }*/
 }

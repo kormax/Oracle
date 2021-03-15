@@ -18,6 +18,7 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 48,
+      width: double.infinity,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: MaterialButton(
