@@ -40,11 +40,6 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
             children: <Widget>[
               SizedBox(height: 16),
               EntryField(
-                label: "Priority",
-                type: EntryFieldType.integer,
-                value: taskToEdit?.priority?.toString(),
-              ),
-              EntryField(
                 label: "Name",
                 type: EntryFieldType.plaintext,
                 value: taskToEdit?.name?.toString(),
@@ -54,15 +49,23 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
                 type: EntryFieldType.plaintext,
                 value: taskToEdit?.description?.toString(),
               ),
+              Divider(height: 32),
+              EntryField(
+                label: "Priority",
+                type: EntryFieldType.integer,
+                value: taskToEdit?.priority?.toString(),
+              ),
               EntryField(
                 label: "Status",
                 type: EntryFieldType.plaintext,
                 value: taskToEdit?.status?.toString(),
               ),
-              SizedBox(height: 16),
+              Divider(height: 32),
               DatePicker("Due date"),
               SizedBox(height: 16),
               DatePicker("Completion date"),
+              Divider(height: 32),
+              EntryField(label: "Grade", type: EntryFieldType.integer, value: taskToEdit?.grade?.toString(),),
               SizedBox(height: 16),
               EntryField(
                 label: "Grade",

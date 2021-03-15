@@ -8,7 +8,7 @@ import 'package:data/screens/tasks/tasks.dart';
 import 'package:data/screens/today.dart';
 import 'package:flutter/material.dart';
 
-import 'actions/actions.dart';
+import 'manage/manage.dart';
 import 'initial/login.dart';
 import 'initial/welcome.dart';
 
@@ -79,7 +79,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   List<Widget> tabPages = [
     TodayScreen(),
     TasksScreen(),
-    ActionsScreen(),
+    ManageScreen(),
   ];
 
   @override
@@ -92,7 +92,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       case "tasks":
         _pageIndex = 1;
         break;
-      case "actions":
+      case "manage":
         _pageIndex = 2;
         break;
     }
@@ -140,7 +140,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_chart),
-            label: 'Actions',
+            label: 'Manage',
           ),
         ],
 

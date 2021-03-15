@@ -19,7 +19,7 @@ class EntryField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: 8),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,36 +31,41 @@ class EntryField extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
-          TextField(
-              controller: textController,
-              obscureText: type == EntryFieldType.password,
-              decoration: InputDecoration(
-                border:  OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(8.0),
-                  ),
-                ),
-                 enabledBorder:  OutlineInputBorder(
-                  borderSide:  BorderSide(
-                    width: 2,
-                    color: Colors_.grayscaleNeutral
-                  ),
-                   borderRadius: const BorderRadius.all(
-                     const Radius.circular(8.0),
-                   ),
-                ),
-                focusedBorder:  OutlineInputBorder(
-                  borderSide:  BorderSide(
-                      width: 3,
-                      color: Colors_.primary
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(8.0),
-                  ),
-                ),
+          SizedBox(
+            height: 48,
+            child: TextField(
+                controller: textController,
+                obscureText: type == EntryFieldType.password,
+                decoration: InputDecoration(
+                  border:  OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(8.0),
+                    ),
 
-              )
+                  ),
+                  enabledBorder:  OutlineInputBorder(
+                    borderSide:  BorderSide(
+                        width: 2,
+                        color: Colors_.grayscaleNeutral
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(8.0),
+                    ),
+                  ),
+                  focusedBorder:  OutlineInputBorder(
+                    borderSide:  BorderSide(
+                        width: 3,
+                        color: Colors_.primary
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(8.0),
+                    ),
+                  ),
+
+                )
+            ),
           )
+
         ],
       ),
     );

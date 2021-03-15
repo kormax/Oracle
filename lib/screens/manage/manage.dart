@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 
-class ActionsScreen extends StatefulWidget {
+class ManageScreen extends StatefulWidget {
   @override
-  _ActionsScreenState createState() => _ActionsScreenState();
+  _ManageScreenState createState() => _ManageScreenState();
 }
 
-class _ActionsScreenState extends State<ActionsScreen> {
+class _ManageScreenState extends State<ManageScreen> {
 
 
   @override
@@ -24,7 +24,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
     return Column(
         children: [
           Container(
-              child: Text("Actions screen")
+              child: Text("Manage screen")
           )
         ]
     );
