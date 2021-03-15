@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import "package:data/constants.dart";
+import "dart:math";
 
 class ManageScreen extends StatefulWidget {
   @override
@@ -21,12 +22,69 @@ class _ManageScreenState extends State<ManageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Container(
+        padding: EdgeInsets.all(16),
+      color: Colors.transparent,
+      child: Column(
         children: [
-          Container(
-              child: Text("Manage screen")
+         Expanded(child:
+             GestureDetector(
+               onTap: () => Navigator.pushNamed(context, "/data"),
+               child:  Card(child:
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    color: Colors_.infoPrimary,
+
+                  ),
+
+
+              child: Stack(children: [
+
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Transform.rotate(
+                      angle: -pi / 4,
+                      child: Icon(Icons.insert_drive_file_outlined, size: 96)
+                  )
+                ),
+                Center(child: Text("Data", style: TextStyle(color: Colors_.grayscaleWhite, fontSize: 28), )),
+
+              ])
+            ),
+          ),
+             )
+         ),
+
+          Expanded(child: GestureDetector(
+            onTap: () => Navigator.pushNamed(context, "/devices"),
+            child: Card(child:
+            Container(
+
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                color: Colors_.successPrimary,
+
+              ),
+              child:  Stack(children: [
+                  Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Transform.rotate(
+                          angle: -pi / 4,
+                          child: Icon(Icons.device_hub_outlined, size: 80)
+                      )
+                  ),
+                  Center(child: Text("Devices", style: TextStyle(color: Colors_.grayscaleWhite, fontSize: 28), )),
+
+                ])
+              ),
+            ),
+            )
           )
-        ]
+        ],
+      )
     );
   }
 }

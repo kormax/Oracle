@@ -65,7 +65,6 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
               SizedBox(height: 16),
               DatePicker("Completion date"),
               Divider(height: 32),
-              EntryField(label: "Grade", type: EntryFieldType.integer, value: taskToEdit?.grade?.toString(),),
               SizedBox(height: 16),
               EntryField(
                 label: "Grade",

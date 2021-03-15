@@ -1,5 +1,6 @@
 import "package:data/constants.dart";
 import 'package:data/screens/initial/signup.dart';
+import 'package:data/screens/manage/devices/pairing.dart';
 import 'package:data/screens/profile.dart';
 import 'package:data/screens/settings.dart';
 import 'package:data/screens/tasks/task-editor.dart';
@@ -8,6 +9,7 @@ import 'package:data/screens/tasks/tasks.dart';
 import 'package:data/screens/today.dart';
 import 'package:flutter/material.dart';
 
+import 'manage/devices/devices.dart';
 import 'manage/manage.dart';
 import 'initial/login.dart';
 import 'initial/welcome.dart';
@@ -49,6 +51,8 @@ class MainScreen extends StatelessWidget {
         "/settings": (context) => SettingsScreen(),
         "/task/edit": (context) => TaskEditorScreen(),
         "/task/preview": (context) => TaskPreview(),
+        "/devices": (context) => DevicesScreen(),
+        "/devices/pairing": (context) => PairingScreen()
       }
     );
   }
