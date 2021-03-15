@@ -125,6 +125,7 @@ class TaskPreview extends StatelessWidget {
         onPressed: () {
           // Add your onPressed code here!
         },
+        backgroundColor: Colors_.primaryNormal,
         icon: const Icon(Icons.add, color: Colors_.grayscaleWhite,),
         label: const Text('Add note', style: TextStyle(color: Colors_.grayscaleWhite,)),
       ),
