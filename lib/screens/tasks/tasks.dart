@@ -1,7 +1,7 @@
-import 'package:data/entities/task.dart';
 import 'package:data/services/task_service.dart';
+import 'package:data/widgets/task_widget.dart';
 import 'package:flutter/material.dart';
-
+import 'package:data/constants.dart';
 
 class TasksScreen extends StatefulWidget {
   @override
@@ -10,16 +10,10 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
   TaskService taskService;
-  List<Task> tasks;
-
 
   @override
-  void initState(){
+  void initState() {
     this.taskService = TaskService();
-    this.taskService.getTasks().then((value) {
-      this.tasks=value;
-      print(value);
-    });
     super.initState();
   }
 
@@ -30,12 +24,28 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children: [
-          Container(
-              child: Text("Tasks screen")
-          )
-        ]
+    return Scaffold(
+      body: Column(children: [
+        Container(
+          child: FutureBuilder(
+            future: this.taskService.getTasks(),
+            builder: (context, projectSnap) {
+              return ListView.builder(
+                  itemCount: projectSnap.data.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    return TaskWidget(task: projectSnap.data[index]);
+                  });
+            },
+          ),
+        )
+      ]),
+      floatingActionButton: FloatingActionButton(
+          elevation: 0.0,
+          child: new Icon(Icons.add, color: Colors_.grayscaleWhite),
+          backgroundColor: Colors_.primaryNormal,
+          onPressed: () {}),
     );
   }
 }
