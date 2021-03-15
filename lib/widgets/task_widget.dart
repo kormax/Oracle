@@ -23,6 +23,7 @@ class TaskWidget extends StatelessWidget {
 
     return GestureDetector(
         onTap: _onPressed,
+
         child: Card(
             margin: EdgeInsets.only(left: 16, top: 16, right: 16),
             shape: RoundedRectangleBorder(
