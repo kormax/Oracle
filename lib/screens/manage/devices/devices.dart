@@ -33,23 +33,31 @@ class _DevicesScreenState extends State<DevicesScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          SingleChildScrollView(
+          Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Spacer(),
+
 
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                  child: Text(
-                    "Devices text",
-                    style: TextStyle(
-                      fontSize: 28,
-                      height: 40/28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors_.grayscaleDarkest,
-                    ),),
+                    margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                    child: Center(child:
+                    Column(children: [
+                      Text(
+                        "No devices",
+                        style: TextStyle(
+                          fontSize: 28,
+                          height: 32/28,
+                          fontWeight: FontWeight.w600,
+                          color: Colors_.grayscaleDarkest,
+                        ),
+                      ),
+                    ])
+                    )
                 ),
+                Spacer(),
 
               ],
             ),

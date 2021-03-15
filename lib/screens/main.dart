@@ -1,5 +1,7 @@
 import "package:data/constants.dart";
 import 'package:data/screens/initial/signup.dart';
+import 'package:data/screens/manage/data/data-editor.dart';
+import 'package:data/screens/manage/data/data.dart';
 import 'package:data/screens/manage/devices/pairing.dart';
 import 'package:data/screens/profile.dart';
 import 'package:data/screens/settings.dart';
@@ -51,6 +53,8 @@ class MainScreen extends StatelessWidget {
         "/settings": (context) => SettingsScreen(),
         "/task/edit": (context) => TaskEditorScreen(),
         "/task/preview": (context) => TaskPreview(),
+        "/data": (context) => DataScreen(),
+        "/data/edit": (context) => DataEditorScreen(),
         "/devices": (context) => DevicesScreen(),
         "/devices/pairing": (context) => PairingScreen()
       }

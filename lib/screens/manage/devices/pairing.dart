@@ -32,24 +32,33 @@ class _PairingScreenState extends State<PairingScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          SingleChildScrollView(
+          Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Spacer(),
+
 
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                  child: Text(
-                    "Device pairing text haha",
-                    style: TextStyle(
-                      fontSize: 28,
-                      height: 40/28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors_.grayscaleDarkest,
-                    ),),
+                  child: Center(child:
+                    Column(children: [
+                        CircularProgressIndicator(backgroundColor: Colors_.primary,),
+                        SizedBox(height: 32,),
+                        Text(
+                          "Looking for devices...",
+                          style: TextStyle(
+                            fontSize: 28,
+                            height: 32/28,
+                            fontWeight: FontWeight.w600,
+                            color: Colors_.grayscaleDarkest,
+                          ),
+                        ),
+                      ])
+                  )
                 ),
-
+                Spacer(),
 
               ],
             ),
