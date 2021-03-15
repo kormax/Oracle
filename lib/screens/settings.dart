@@ -54,6 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 
                 Card(
+                  elevation: 1.0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: Container(
@@ -113,6 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 SizedBox(height: 8),
                 Card(
+                  elevation: 1.0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: Container(
@@ -175,6 +177,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
 
                 Card(
+                  elevation: 1.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   child: Container(
                       width: double.infinity,
                       //padding: EdgeInsets.all(8),

@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Card(
                 margin: EdgeInsets.only(top: 16, left: 16, right: 16),
-                elevation: 4.0,
+                elevation: 1.0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8))),
                 color: Colors_.primaryLightest,
@@ -90,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Card(
               margin: EdgeInsets.all(16),
-              elevation: 4.0,
+              elevation: 1.0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8))),
 

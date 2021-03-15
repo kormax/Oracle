@@ -1,4 +1,5 @@
 import 'package:data/widgets/bar_chart.dart';
+import 'package:data/widgets/containered_table_cell.dart';
 import 'package:flutter/material.dart';
 import "package:data/constants.dart";
 
@@ -26,9 +27,7 @@ class _TodayScreenState extends State<TodayScreen> {
     double margin = size.width * 0.1;
 
     return SingleChildScrollView(
-      child: SizedBox(
-        height: size.height,
-        child: Column(
+      child: Column(
           children: [
             Card(
               margin: EdgeInsets.only(left: 16, top: 16, right: 16),
@@ -142,8 +141,9 @@ class _TodayScreenState extends State<TodayScreen> {
 
 
             Card(
-              margin: EdgeInsets.all(16),
-              shape: RoundedRectangleBorder(
+                margin: EdgeInsets.only(left: 16, top: 16, right: 16),
+
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Padding(
                 padding: EdgeInsets.all(16),
@@ -153,11 +153,167 @@ class _TodayScreenState extends State<TodayScreen> {
                   labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                 ),
               )
-            )
+            ),
 
-          ],
-        )
-      )
+            Card(
+                margin: EdgeInsets.only(left: 16, top: 16, right: 16),
+
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
+                child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child:Column(children: [
+                      Row(children: [
+                        Text(
+                          "Last readings",
+
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        Spacer()
+
+                      ]),
+
+                      SizedBox(height: 8),
+
+                      Table(
+                        border: TableBorder.symmetric(
+                          inside: BorderSide(width: 2, color: Colors_.grayscaleLightest),
+                        ),
+                        children: [
+                          TableRow(
+                              children: [
+                                ContaineredTableCell(
+                                  child: Text('Time')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Sensor id')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Type')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Value')
+                                ),
+                          ]),
+
+                          TableRow(
+                              children: [
+                                ContaineredTableCell(
+                                    child: Text('12:15')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('ASD-S122')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Temperature')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('15.00')
+                                ),
+                              ]),
+                          TableRow(
+                              children: [
+                                ContaineredTableCell(
+                                    child: Text('12:13')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('ASB-S121')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Temperature')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('17.12')
+                                ),
+                              ]),
+                          TableRow(
+                              children: [
+                                ContaineredTableCell(
+                                    child: Text('11:50')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('ASB-S121')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Temperature')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('17.10')
+                                ),
+                              ]),
+                          TableRow(
+                              children: [
+                                ContaineredTableCell(
+                                    child: Text('11:03')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('ASB-S121')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Temperature')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('17.09')
+                                ),
+                              ]),
+                          TableRow(
+                              children: [
+                                ContaineredTableCell(
+                                    child: Text('10:33')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('ASB-S121')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('Temperature')
+                                ),
+                                ContaineredTableCell(
+                                    child: Text('17.09')
+                                ),
+                              ]),
+                          //TableRow(),
+                        ],
+                      ),
+
+                    ])
+                )
+            ),
+
+    Card(
+      margin: EdgeInsets.only(left: 16, top: 16, right: 16),
+
+      shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8))),
+      child: Padding(
+      padding: EdgeInsets.all(32),
+      child:Container(
+        width: double.infinity,
+        child: Column(children: [
+          Text(
+          "You're all caught up!",
+
+          textAlign: TextAlign.left,
+          style: const TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16,),
+          Icon(Icons.check_circle_outline_rounded, color: Colors_.successPrimary,)
+        ]),
+
+      ))
+    ),
+
+    SizedBox(height: 16,)
+
+
+      ])
     );
   }
 }
