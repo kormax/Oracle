@@ -25,22 +25,35 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
-        Container(
-          child: FutureBuilder(
-            future: this.taskService.getTasks(),
-            builder: (context, projectSnap) {
-              return ListView.builder(
-                  itemCount: projectSnap.data.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    return TaskWidget(task: projectSnap.data[index]);
-                  });
-            },
-          ),
-        )
-      ]),
+      body: Container(
+        child: FutureBuilder(
+          future: this.taskService.getTasks(),
+          builder: (context, projectSnap) {
+            if (projectSnap.data == null) {
+              return Container(
+                child: Text('Loading'),
+              );
+            }
+            return ListView.builder(
+              itemCount: projectSnap.data.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return Dismissible(
+                    key: Key(projectSnap.data[index].name),
+                    onDismissed: (direction) {
+                      setState(() {
+                        projectSnap.data.removeAt(index);
+                      });
+                    },
+                    child: TaskWidget(
+                      task: projectSnap.data[index],
+                    ));
+              },
+            );
+          },
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
           elevation: 0.0,
           child: new Icon(Icons.add, color: Colors_.grayscaleWhite),
