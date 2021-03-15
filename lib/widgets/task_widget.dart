@@ -8,46 +8,63 @@ class TaskWidget extends StatelessWidget {
 
   const TaskWidget({this.task});
 
+
+
+
   @override
   Widget build(BuildContext context) {
-    // return ListTile(
-    //     title: Padding(
-    //         padding: EdgeInsets.all(20),
-    //         child: Container(
-    //           child: Text(this.task.name),
-    //         )));
+    void _onPressed() {
+      Navigator.pushNamed(
+        context,
+        "/task/edit",
+        arguments: task,
+      );
+    }
+
     return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            "/task-edit",
-            arguments: task,
-          );
-        },
+        onTap: _onPressed,
         child: Card(
             margin: EdgeInsets.only(left: 16, top: 16, right: 16),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(children: [
-                Row(children: [
-                  Text(this.task.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17.0,
-                      )),
-                ]),
-                SizedBox(height: 5),
+            child: Column(children: [
                 Container(
-                  child: Text(this.task.description),
-                  decoration: BoxDecoration(
-                      color: Colors_.primaryLightest,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   padding: EdgeInsets.all(16),
-                  width: 128 * 3.0,
+                  child: Row(children: [
+                    Text(this.task.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          height: 24/18
+                        )
+                    ),
+                    Spacer(),
+                    Text(this.task.dueDate.toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14.0,
+                            height: 24/14
+                        )
+                    ),
+
+                    /*SizedBox(
+                      height: 48,
+                      width: 48,
+                      child: IconButton(icon: Icon(Icons.edit), onPressed: _onPressed)
+                    )*/
+
+                  ]),
+                ),
+
+                Divider(height: 8,),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Row(children: [
+                    Text(this.task.description),
+                  ]),
+
                 )
               ]),
-            )));
+            ));
   }
 }

@@ -35,6 +35,7 @@ class _TasksScreenState extends State<TasksScreen> {
               );
             }
             return ListView.builder(
+              padding: EdgeInsets.only(bottom: 16),
               itemCount: projectSnap.data.length,
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
@@ -59,7 +60,7 @@ class _TasksScreenState extends State<TasksScreen> {
           child: new Icon(Icons.add, color: Colors_.grayscaleWhite),
           backgroundColor: Colors_.primaryNormal,
           onPressed: () {
-            Navigator.pushNamed(context, "/task-edit");
+            Navigator.pushNamed(context, "/task/edit");
           }),
     );
   }

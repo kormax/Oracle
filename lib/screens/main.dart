@@ -46,7 +46,7 @@ class MainScreen extends StatelessWidget {
         "/main": (context) => MainNavigationScreen(defaultPage: "today",),
         "/profile": (context) => ProfileScreen(),
         "/settings": (context) => SettingsScreen(),
-        "/task-edit": (context) => TaskEditorScreen(),
+        "/task/edit": (context) => TaskEditorScreen(),
       }
     );
   }
