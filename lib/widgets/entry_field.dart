@@ -10,9 +10,13 @@ class EntryField extends StatelessWidget {
 
   var textController = TextEditingController();
 
-  EntryField({@required this.label, this.type = EntryFieldType.plaintext, this.value = ''}) {
+  EntryField({@required this.label, this.type = EntryFieldType.plaintext, this.value = '', TextEditingController controller}) {
     if(value != null) {
       textController.text = value;
+    }
+
+    if (controller != null) {
+      textController = controller;
     }
   }
 

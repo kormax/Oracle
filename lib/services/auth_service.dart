@@ -1,0 +1,15 @@
+import 'package:data/entities/user.dart';
+import 'package:data/services/api-urls.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+
+class AuthService {
+  static Future<Response> loginUser({String login, String password}) {
+    return http.post(ApiUrls.getLoginUrl(),
+        body: {'email': login, 'password': password});
+  }
+
+  static Future<Response> registerUser(User user) {
+    return http.post(ApiUrls.getLoginUrl(), body: user);
+  }
+}
