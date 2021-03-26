@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:data/constants.dart';
+import 'package:data/entities/user.dart';
+import 'package:data/services/auth_service.dart';
+import 'package:data/utils/form_group_util.dart';
 import 'package:data/widgets/button.dart';
 import 'package:data/widgets/entry_field.dart';
 import 'package:data/widgets/entry_field_type.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 
 class SignUpScreen extends StatefulWidget {
@@ -15,13 +21,14 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  FormGroupUtil signUpFormGroup = new FormGroupUtil(['email', 'password', 'first_name', 'last_name']);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxHeight <= 512 + 128) {
+              if (constraints.maxHeight <= 512 + 128 || true) {
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(16),
                   child: Column(
@@ -35,10 +42,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
 
 
-                      EntryField(label: "Login", type: EntryFieldType.plaintext),
-                      EntryField(label: "Email", type: EntryFieldType.plaintext),
-                      EntryField(label: "Password", type: EntryFieldType.password),
-                      EntryField(label: "Retype password", type: EntryFieldType.password),
+                      EntryField(label: "Email", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('email'),),
+                      EntryField(label: "Password", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('password')),
+                      EntryField(label: "First name", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('first_name')),
+                      EntryField(label: "Last name", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('last_name')),
 
 
                       SizedBox(height: 32),
@@ -65,10 +72,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                         Spacer(),
 
-                        EntryField(label: "Login", type: EntryFieldType.plaintext),
-                        EntryField(label: "Email", type: EntryFieldType.plaintext),
-                        EntryField(label: "Password", type: EntryFieldType.password),
-                        EntryField(label: "Retype password", type: EntryFieldType.password),
+                        EntryField(label: "Email", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('email'),),
+                        EntryField(label: "Password", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('password')),
+                        EntryField(label: "First name", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('first_name')),
+                        EntryField(label: "Last name", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('last_name')),
 
                         Spacer(),
 
@@ -88,7 +95,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     text: "Signup",
     color: Colors_.primaryNormal,
     textColor: Colors_.grayscaleWhite,
-    onPressed: () => Navigator.popAndPushNamed(context, "/main"),
+    onPressed: () {
+      print(signUpFormGroup.getFormGroupValue());
+
+      AuthService.registerUser(signUpFormGroup.getFormGroupValue())
+      .then((Response response) {
+        if (response.statusCode == HttpStatus.created) Navigator.popAndPushNamed(context, "/main");
+      });
+    },
   );
 
   Widget LoginButton() => Button(

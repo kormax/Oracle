@@ -6,6 +6,6 @@ class ApiUrls {
   }
 
   static Uri getRegisterUrl() {
-    return Uri.http(environment.authUrl, "/register");
+    return Uri.http(environment.authUrl, "/register/");
   }
 }

@@ -17,6 +17,7 @@ class EntryField extends StatelessWidget {
 
     if (controller != null) {
       textController = controller;
+      textController.text = value ?? '';
     }
   }
 

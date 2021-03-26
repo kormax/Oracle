@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:data/constants.dart';
 import 'package:data/services/auth_service.dart';
+import 'package:data/utils/form_group_util.dart';
 import 'package:data/widgets/button.dart';
 import 'package:data/widgets/entry_field.dart';
 import 'package:data/widgets/entry_field_type.dart';
@@ -18,8 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
+  FormGroupUtil loginFormGroup = new FormGroupUtil(['email', 'password']);
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 EntryField(
                   label: "Login",
                   type: EntryFieldType.plaintext,
-                  controller: emailController,
+                  controller: loginFormGroup.getFormControl('email'),
                 ),
                 EntryField(
                   label: "Password",
                   type: EntryFieldType.password,
-                  controller: passwordController,
+                  controller: loginFormGroup.getFormControl('password'),
                 ),
                 Spacer(),
                 LoginButton(),
@@ -86,16 +86,21 @@ class _LoginScreenState extends State<LoginScreen> {
         color: Colors_.primaryNormal,
         textColor: Colors_.grayscaleWhite,
         onPressed: () {
+          Map<String, String> fromData = loginFormGroup.getFormGroupValue();
+
           AuthService.loginUser(
-                  login: emailController.text,
-                  password: passwordController.text)
+                  login: fromData['email'], password: fromData['password'])
               .then((Response response) {
             if (response.statusCode == HttpStatus.ok) {
               Navigator.popAndPushNamed(context, "/main");
             }
 
             if (response.statusCode == HttpStatus.unauthorized) {
-              print('sdasdf');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Wrong credentials!'),
+                ),
+              );
             }
           });
         },

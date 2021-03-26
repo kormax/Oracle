@@ -9,7 +9,9 @@ class AuthService {
         body: {'email': login, 'password': password});
   }
 
-  static Future<Response> registerUser(User user) {
-    return http.post(ApiUrls.getLoginUrl(), body: user);
+  static Future<Response> registerUser(dynamic user) {
+    print(user);
+
+    return http.post(ApiUrls.getRegisterUrl(), body: user);
   }
 }
