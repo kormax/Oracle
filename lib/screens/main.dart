@@ -1,3 +1,5 @@
+import 'package:data/bloc/token.bloc.dart';
+import 'package:data/bloc/user.bloc.dart';
 import "package:data/constants.dart";
 import 'package:data/screens/initial/signup.dart';
 import 'package:data/screens/manage/data/data-editor.dart';
@@ -10,6 +12,7 @@ import 'package:data/screens/tasks/task-preview.dart';
 import 'package:data/screens/tasks/tasks.dart';
 import 'package:data/screens/today.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'manage/devices/devices.dart';
 import 'manage/manage.dart';
@@ -20,48 +23,54 @@ class MainScreen extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          primaryColor: Colors_.primary,
-          accentColor: Colors_.primaryLight,
-          textTheme: TextTheme(
-              headline1: TextStyle(color: Colors_.grayscaleDarkest),
-              headline2: TextStyle(color: Colors_.grayscaleDarkest),
-              headline3: TextStyle(color: Colors_.grayscaleDarkest),
-              headline4: TextStyle(color: Colors_.grayscaleDarkest),
-              headline5: TextStyle(color: Colors_.grayscaleDarkest),
-              headline6: TextStyle(color: Colors_.grayscaleDarkest),
-              bodyText1: TextStyle(color: Colors_.grayscaleDarkest),
-              bodyText2: TextStyle(color: Colors_.grayscaleDarkest),
-              subtitle1: TextStyle(color: Colors_.grayscaleDarkest),
-              subtitle2: TextStyle(color: Colors_.grayscaleDarkest),
-          ),
-          fontFamily: 'Rubik',
-          backgroundColor: Colors_.grayscaleWhite,
-          disabledColor: Colors_.disabledPrimary
-      ),
-      debugShowCheckedModeBanner: false,
-
-      initialRoute: '/welcome',
-      routes: {
-        "/welcome": (context) => OnboardingScreen(),
-        "/signup": (context) => SignUpScreen(),
-        "/login": (context) => LoginScreen(),
-        "/main": (context) => MainNavigationScreen(defaultPage: "today",),
-        "/profile": (context) => ProfileScreen(),
-        "/settings": (context) => SettingsScreen(),
-        "/task/edit": (context) => TaskEditorScreen(),
-        "/task/preview": (context) => TaskPreview(),
-        "/data": (context) => DataScreen(),
-        "/data/edit": (context) => DataEditorScreen(),
-        "/devices": (context) => DevicesScreen(),
-        "/devices/pairing": (context) => PairingScreen()
-      }
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TokenBloc>(
+          create: (_) => TokenBloc(),
+        ),
+        BlocProvider<UserBloc>(create: (_) => UserBloc()),
+      ],
+      child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+              primaryColor: Colors_.primary,
+              accentColor: Colors_.primaryLight,
+              textTheme: TextTheme(
+                headline1: TextStyle(color: Colors_.grayscaleDarkest),
+                headline2: TextStyle(color: Colors_.grayscaleDarkest),
+                headline3: TextStyle(color: Colors_.grayscaleDarkest),
+                headline4: TextStyle(color: Colors_.grayscaleDarkest),
+                headline5: TextStyle(color: Colors_.grayscaleDarkest),
+                headline6: TextStyle(color: Colors_.grayscaleDarkest),
+                bodyText1: TextStyle(color: Colors_.grayscaleDarkest),
+                bodyText2: TextStyle(color: Colors_.grayscaleDarkest),
+                subtitle1: TextStyle(color: Colors_.grayscaleDarkest),
+                subtitle2: TextStyle(color: Colors_.grayscaleDarkest),
+              ),
+              fontFamily: 'Rubik',
+              backgroundColor: Colors_.grayscaleWhite,
+              disabledColor: Colors_.disabledPrimary),
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/welcome',
+          routes: {
+            "/welcome": (context) => OnboardingScreen(),
+            "/signup": (context) => SignUpScreen(),
+            "/login": (context) => LoginScreen(),
+            "/main": (context) => MainNavigationScreen(
+                  defaultPage: "today",
+                ),
+            "/profile": (context) => ProfileScreen(),
+            "/settings": (context) => SettingsScreen(),
+            "/task/edit": (context) => TaskEditorScreen(),
+            "/task/preview": (context) => TaskPreview(),
+            "/data": (context) => DataScreen(),
+            "/data/edit": (context) => DataEditorScreen(),
+            "/devices": (context) => DevicesScreen(),
+            "/devices/pairing": (context) => PairingScreen()
+          }),
     );
   }
 }
-
 
 class MainNavigationScreen extends StatefulWidget {
   final defaultPage;
@@ -72,7 +81,8 @@ class MainNavigationScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MainNavigationScreenState createState() => new _MainNavigationScreenState(defaultPage: this.defaultPage);
+  _MainNavigationScreenState createState() =>
+      new _MainNavigationScreenState(defaultPage: this.defaultPage);
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
@@ -91,9 +101,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   ];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    switch(defaultPage) {
+    switch (defaultPage) {
       case "today":
         _pageIndex = 0;
         break;
@@ -117,17 +127,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            "",
-            style: TextStyle(color: Colors_.grayscaleWhite)
-        ),
+        title: Text("", style: TextStyle(color: Colors_.grayscaleWhite)),
         backgroundColor: Colors_.primary,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.supervised_user_circle_outlined),
             tooltip: 'Profile',
-            onPressed: () =>
-                Navigator.of(context).pushNamed("/profile"),
+            onPressed: () => Navigator.of(context).pushNamed("/profile"),
           ),
         ],
       ),
@@ -136,7 +142,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         onTap: onTabTapped,
         backgroundColor: Colors_.grayscaleWhite,
         selectedItemColor: Colors_.selectedPrimary,
-
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.today),
@@ -151,9 +156,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             label: 'Manage',
           ),
         ],
-
       ),
-
       body: PageView(
         children: tabPages,
         onPageChanged: onPageChanged,
@@ -161,6 +164,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       ),
     );
   }
+
   void onPageChanged(int page) {
     setState(() {
       this._pageIndex = page;
@@ -168,11 +172,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   void onTabTapped(int index) {
-    this._pageController.animateToPage(
-        index,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut
-    );
+    this._pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 }
-

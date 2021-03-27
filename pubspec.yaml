@@ -30,7 +30,8 @@ dependencies:
   url_launcher: ^6.0.2
   flutter_svg: any
   fl_chart: ^0.20.1
-
+  bloc: ^7.0.0
+  flutter_bloc: ^7.0.0
   flutter_blue: ^0.8.0
   http: ^0.13.1
 
