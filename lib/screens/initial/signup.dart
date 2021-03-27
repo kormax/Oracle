@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:data/constants.dart';
@@ -22,6 +23,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   FormGroupUtil signUpFormGroup =
       new FormGroupUtil(['email', 'password', 'first_name', 'last_name']);
+
+  bool error = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +72,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           SizedBox(height: 32,),
 
-                          EntryField(label: "Email", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('email'),),
-                          EntryField(label: "Password", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('password')),
-                          EntryField(label: "First name", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('first_name')),
-                          EntryField(label: "Last name", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('last_name')),
+                          EntryField(label: "Email", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('email'), error: error,),
+                          EntryField(label: "Password", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('password'), error: error,),
+                          EntryField(label: "First name", type: EntryFieldType.plaintext, controller: signUpFormGroup.getFormControl('first_name'), error: error,),
+                          EntryField(label: "Last name", type: EntryFieldType.password, controller: signUpFormGroup.getFormControl('last_name'), error: error,),
 
                           SizedBox(height: 32,),
 
@@ -94,12 +97,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
         color: Colors_.primaryNormal,
         textColor: Colors_.grayscaleWhite,
         onPressed: () {
-          print(signUpFormGroup.getFormGroupValue());
+          Map<String, String> newUser = signUpFormGroup.getFormGroupValue();
 
-          AuthService.registerUser(signUpFormGroup.getFormGroupValue())
+          AuthService.registerUser(newUser)
               .then((Response response) {
-            if (response.statusCode == HttpStatus.created)
+            if (response.statusCode == HttpStatus.created) {
+              AuthService.loginUser(password: newUser['password'], login: newUser['email'])
+              .then((value) {
+                print(value.body);
+
+                Navigator.popAndPushNamed(context, "/main");
+              });
+
               Navigator.popAndPushNamed(context, "/main");
+            } else {
+              Map<String, dynamic> error = jsonDecode(response.body);
+
+              this.error = true;
+
+              error.forEach((key, value) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(value.toString().replaceAll(RegExp(r'\[|\]'), '')),
+                  ),
+                );
+              });
+            }
           });
         },
       );

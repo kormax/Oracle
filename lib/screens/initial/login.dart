@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:data/constants.dart';
@@ -68,14 +69,16 @@ class _LoginScreenState extends State<LoginScreen> {
               .then((Response response) {
             if (response.statusCode == HttpStatus.ok) {
               Navigator.popAndPushNamed(context, "/main");
-            }
+            } else {
+              Map<String, dynamic> error = jsonDecode(response.body);
 
-            if (response.statusCode == HttpStatus.unauthorized || response.statusCode == HttpStatus.badRequest) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Wrong credentials!'),
-                ),
-              );
+              error.forEach((key, value) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(value.toString()),
+                  ),
+                );
+              });
             }
           });
         },

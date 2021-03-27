@@ -10,15 +10,25 @@ class EntryField extends StatelessWidget {
 
   var textController = TextEditingController();
 
-  EntryField({@required this.label, this.type = EntryFieldType.plaintext, this.value = '', TextEditingController controller}) {
-    if(value != null) {
+  bool formError = false;
+
+  EntryField(
+      {@required this.label,
+      this.type = EntryFieldType.plaintext,
+      this.value = '',
+      TextEditingController controller,
+      bool error = false}) {
+    if (value != null) {
       textController.text = value;
     }
 
     if (controller != null) {
       textController = controller;
-      textController.text = textController.text.isEmpty ? value : textController.text;
+      textController.text =
+          textController.text.isEmpty ? value : textController.text;
     }
+
+    formError = error;
   }
 
   @override
@@ -42,35 +52,26 @@ class EntryField extends StatelessWidget {
                 controller: textController,
                 obscureText: type == EntryFieldType.password,
                 decoration: InputDecoration(
-                  border:  OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(8.0),
-                    ),
-
-                  ),
-                  enabledBorder:  OutlineInputBorder(
-                    borderSide:  BorderSide(
-                        width: 2,
-                        color: Colors_.grayscaleNeutral
-                    ),
+                  border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(8.0),
                     ),
                   ),
-                  focusedBorder:  OutlineInputBorder(
-                    borderSide:  BorderSide(
-                        width: 3,
-                        color: Colors_.primary
-                    ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(width: 2, color: formError ? Colors_.errorPrimary : Colors_.grayscaleNeutral),
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(8.0),
                     ),
                   ),
-
-                )
-            ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 3, color: Colors_.primary),
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(8.0),
+                    ),
+                  ),
+                )),
           )
-
         ],
       ),
     );
