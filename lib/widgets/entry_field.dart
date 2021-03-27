@@ -17,7 +17,7 @@ class EntryField extends StatelessWidget {
 
     if (controller != null) {
       textController = controller;
-      textController.text = value ?? '';
+      textController.text = textController.text.isEmpty ? value : textController.text;
     }
   }
 

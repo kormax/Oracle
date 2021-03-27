@@ -16,4 +16,8 @@ class FormGroupUtil {
   Map<String, String> getFormGroupValue() {
     return formControls.map((key, value) => MapEntry(key, value.text));
   }
+
+  String getFormControlValue(String controlName) {
+    return getFormControl(controlName).text;
+  }
 }

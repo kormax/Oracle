@@ -25,52 +25,27 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      if (constraints.maxHeight <= 512 - 32) {
-        return SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 32),
-              Text("Login", style: Text_.heading1),
-              EntryField(label: "Login", type: EntryFieldType.plaintext),
-              EntryField(label: "Password", type: EntryFieldType.password),
-              SizedBox(height: 32),
-              LoginButton(),
-              SizedBox(height: 8),
-              SignupButton(),
-            ],
-          ),
-        );
-      } else {
-        return Container(
+      return Center(
+        child: SingleChildScrollView(
+          child: Container(
+            height: constraints.maxHeight,
             padding: EdgeInsets.all(16),
             child: Column(
-              children: [
-                SizedBox(
-                  height: 32,
-                ),
+              children: <Widget>[
+                SizedBox(height: 32),
                 Text("Login", style: Text_.heading1),
                 Spacer(),
-                EntryField(
-                  label: "Login",
-                  type: EntryFieldType.plaintext,
-                  controller: loginFormGroup.getFormControl('email'),
-                ),
-                EntryField(
-                  label: "Password",
-                  type: EntryFieldType.password,
-                  controller: loginFormGroup.getFormControl('password'),
-                ),
+                EntryField(label: "Login", type: EntryFieldType.plaintext, controller: loginFormGroup.getFormControl('email'),),
+                EntryField(label: "Password", type: EntryFieldType.password, controller: loginFormGroup.getFormControl('password'),),
                 Spacer(),
                 LoginButton(),
-                SizedBox(
-                  height: 8,
-                ),
+                SizedBox(height: 8),
                 SignupButton(),
               ],
-            ));
-      }
+            ),
+          )
+        ),
+      );
     }));
   }
 
@@ -95,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.popAndPushNamed(context, "/main");
             }
 
-            if (response.statusCode == HttpStatus.unauthorized) {
+            if (response.statusCode == HttpStatus.unauthorized || response.statusCode == HttpStatus.badRequest) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('Wrong credentials!'),
