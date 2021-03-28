@@ -24,11 +24,11 @@ class Button extends StatelessWidget {
         child: MaterialButton(
           elevation: 24,
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-          color: color,
+          color: this.onPressed != null ? color : Colors_.grayscaleLightest,
           onPressed: onPressed,
           child: Text(
             text,
-            style: TextStyle(color: textColor, fontSize: 16, height: 24/16),
+            style: TextStyle(color: this.onPressed != null ? textColor : Colors_.grayscaleNeutral, fontSize: 16, height: 24/16),
           ),
         ),
       ),

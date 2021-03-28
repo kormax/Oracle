@@ -61,7 +61,7 @@ class _TodayScreenState extends State<TodayScreen> {
                       children: <Widget>[
                         Container(
                           decoration: BoxDecoration(
-                              color: Colors_.successSecondary,
+                              color: Colors_.infoSecondary,
                               borderRadius: BorderRadius.all(Radius.circular(8))
                           ),
                           padding: EdgeInsets.all(16),
@@ -76,7 +76,7 @@ class _TodayScreenState extends State<TodayScreen> {
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16,
                                   height: 24/16,
-                                  color: Colors_.successPrimary
+                                  color: Colors_.infoPrimary
                               ),
                             ),
 
@@ -88,7 +88,7 @@ class _TodayScreenState extends State<TodayScreen> {
                                     fontWeight: FontWeight.w300,
                                     fontSize: 16,
                                     height: 24/16,
-                                    color: Colors_.successPrimary
+                                    color: Colors_.infoPrimary
                                 ),
                               )
                             )
