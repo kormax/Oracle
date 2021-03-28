@@ -23,6 +23,8 @@ class TaskPreview extends StatelessWidget {
               icon: const Icon(Icons.delete),
               tooltip: 'Delete',
               onPressed: () {
+                Navigator.pop(context);
+
                 context.read<TasksBloc>().onDeleteTask(task);
               },
             ),
