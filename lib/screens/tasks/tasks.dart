@@ -47,6 +47,8 @@ class _TasksScreenState extends State<TasksScreen> {
                     onDismissed: (direction) {
                       setState(() {
                         context.read<TasksBloc>().onDeleteTask(state.tasks[index]);
+
+                        state.tasks.removeAt(index);
                       });
                     },
                     child: TaskWidget(

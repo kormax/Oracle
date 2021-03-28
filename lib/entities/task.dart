@@ -19,7 +19,10 @@ class Task {
       this.completion_date, this.grade);
 
   Task.fromJson(Map<String, dynamic> json)
-      : priority = json['priority'],
+      : id = json['id'],
+        priority = json['priority'],
+        creator_id = json['creator_id'],
+        assignee_id = json['assignee_id'],
         name = json['name'],
         description = json['description'],
         status = json['status'],
