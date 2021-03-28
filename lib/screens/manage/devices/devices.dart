@@ -1,5 +1,144 @@
+import 'package:data/services/device_pairing_service.dart';
+import 'package:data/widgets/dot_indicator.dart';
+import 'package:data/widgets/search_scaffold.dart';
 import 'package:flutter/material.dart';
 import "package:data/constants.dart";
+import 'package:flutter_blue/flutter_blue.dart';
+
+class OracleAgent {
+  BluetoothDevice device;
+  bool isPaired;
+  String deviceId;
+  String name;
+
+  String softwareVersion;
+  String deviceType;
+
+  OracleAgent({this.isPaired = false, this.name="", this.deviceId = "",
+    this.softwareVersion = "", this.deviceType="", this.device=null});
+}
+
+
+
+
+class OracleAgentCard extends StatelessWidget {
+  OracleAgent agent;
+
+  OracleAgentCard(this.agent) {}
+
+
+  @override
+  Widget build(BuildContext context) {
+    void _onPressed() {
+      /*Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) =>
+                  DeviceScreen(device: agent.device)));*/
+    }
+
+    return GestureDetector(
+        onTap: _onPressed,
+
+        child: Card(
+          margin: EdgeInsets.only(left: 16, top: 16, right: 16),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          child: Column(children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Row(children: [
+                Text(this.agent.name,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        height: 24/18
+                    )
+                ),
+                Spacer(),
+                Text(this.agent.isPaired ? "Paired" : "Not paired",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14.0,
+                        height: 24/14
+                    )
+                ),
+                SizedBox(width: 6),
+                Align(
+                  alignment: Alignment.center,
+                  child: StreamBuilder<BluetoothDeviceState>(
+                    stream: agent.device.state,
+                    initialData: BluetoothDeviceState.disconnected,
+                    builder: (c, snapshot) {
+                      if (snapshot.data ==
+                          BluetoothDeviceState.connected) {
+                        return DotIndicator(color: Colors_.successPrimary);
+                      } else if (snapshot.data ==
+                          BluetoothDeviceState.disconnected) {
+                        return DotIndicator(color: Colors_.errorPrimary);
+                      }
+                      return DotIndicator(color: Colors_.warningPrimary);
+                    },
+                  ),
+                )
+
+              ]),
+            ),
+
+            Divider(height: 8,),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Row(children: [
+                Text("Type: ${this.agent.deviceType}"),
+                Spacer(),
+                Text("Software version: ${this.agent.softwareVersion}"),
+              ]),
+
+            )
+          ]),
+        ));
+  }
+}
+
+
+
+Future<OracleAgent> loadData(BluetoothDevice device) async {
+  //print("GETTING DEVICE");
+  await device.connect();
+  await device.discoverServices();
+
+  List<BluetoothService> services = await device.discoverServices();
+  //print("Got services ${services}");
+
+  var agent = OracleAgent(name: device.name);
+
+  for (var service in services) {
+    if (service.uuid.toString().toUpperCase() == DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID) {
+      for (var characteristic in service.characteristics) {
+
+        switch(characteristic.uuid.toString().toUpperCase()) {
+          case DevicePairingService.DEVICE_CH_IS_SETUP:
+            var chars = await characteristic.read();
+            agent.isPaired = chars.length == 0 ? false : chars[0];
+            break;
+          case DevicePairingService.DEVICE_CH_SYSTEM_ID:
+            agent.deviceId = String.fromCharCodes(await characteristic.read());
+            break;
+          case DevicePairingService.DEVICE_CH_SOFTWARE_VERSION:
+            agent.softwareVersion = String.fromCharCodes(await characteristic.read());
+            break;
+          case DevicePairingService.DEVICE_CH_DEVICE_TYPE:
+            agent.deviceType = String.fromCharCodes(await characteristic.read());
+            break;
+          default: { }
+          break;
+        }
+      }
+    }
+  }
+  agent.device = device;
+  return agent;
+}
+
 
 class DevicesScreen extends StatefulWidget {
   @override
@@ -24,40 +163,28 @@ class _DevicesScreenState extends State<DevicesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  Colors_.grayscaleWhite,
       appBar: AppBar(
-        title: _isSearching ? _buildSearchField() : _buildTitle(),
-        actions: _buildActions(),
-        iconTheme: IconThemeData(color: Colors_.grayscaleWhite),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              showSearch(context: context, delegate: Search(listExample: []));
+            },
+            icon: Icon(Icons.search),
+          )
+        ],
+        centerTitle: true,
+        title: Text('Devices'),
       ),
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(16.0),
+          SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Spacer(),
-
-
-                Container(
-                    margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                    child: Center(child:
-                    Column(children: [
-                      Text(
-                        "No devices",
-                        style: TextStyle(
-                          fontSize: 28,
-                          height: 32/28,
-                          fontWeight: FontWeight.w600,
-                          color: Colors_.grayscaleDarkest,
-                        ),
-                      ),
-                    ])
-                    )
-                ),
-                Spacer(),
+                LocalDevicesSection(),
+                Divider(height: 8,),
+                DeviceSuggestions()
 
               ],
             ),
@@ -68,85 +195,253 @@ class _DevicesScreenState extends State<DevicesScreen> {
       ),
     );
   }
-  Widget _buildSearchField() {
-    return TextField(
-      controller: _searchQueryController,
-      autofocus: true,
-      decoration: InputDecoration(
-        hintText: "Enter search query...",
-        border: InputBorder.none,
-        hintStyle: TextStyle(color: Colors.white30),
-      ),
-      style: TextStyle(color:  Colors_.grayscaleWhite, fontSize: 16.0),
-      onChanged: (query) => updateSearchQuery(query),
+
+}
+
+class DeviceSuggestions extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(
+              top: 16.0, left: 16.0, right: 16.0),
+          width: double.infinity,
+          alignment: Alignment.topLeft,
+          child: Text("Device suggestions",
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                  height: 24 / 18
+              )
+          ),
+        ),
+      ]
     );
   }
+}
 
-  Widget _buildTitle() {
-    return Text("Devices");
+
+class LocalDevicesSection extends StatefulWidget {
+  @override
+  _LocalDevicesSectionState createState() => _LocalDevicesSectionState();
+}
+
+
+class _LocalDevicesSectionState extends State<LocalDevicesSection> {
+  DevicePairingService devicePairingService;
+
+  _LocalDevicesSectionState() {
+    this.devicePairingService = DevicePairingService();
   }
 
-  List<Widget> _buildActions() {
-    if (_isSearching) {
-      return <Widget>[
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            if (_searchQueryController == null ||
-                _searchQueryController.text.isEmpty) {
-              Navigator.pop(context);
-              return;
-            }
-            _clearSearchQuery();
-          },
-        ),
-      ];
-    }
+  @override
+  void initState(){
+    super.initState();
+    FlutterBlue.instance.startScan();
+  }
 
+  @override
+  void dispose() {
+    super.dispose();
+    FlutterBlue.instance.stopScan();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return  StreamBuilder<BluetoothState>(
+        stream: FlutterBlue.instance.state,
+        initialData: BluetoothState.unknown,
+        builder: (c, snapshot) {
+          final state = snapshot.data;
+          if (state != BluetoothState.on) {
+            return Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(
+                    Icons.bluetooth_disabled_rounded,
+                    size: 64.0,
+                    color: Colors_.grayscaleDark,
+                  ),
+                  Text(
+                    'Please turn on bluetooth \n to discover & view local devices',
+                    style: TextStyle(color: Colors_.grayscaleDarkest,),
+                    textAlign: TextAlign.center,
+                  ),
+                 ],
+              ),
+            );
+          }
+          return Column(
+            children: <Widget>[
+              Container(
+                  padding: const EdgeInsets.only(
+                      top: 16.0, left: 16.0, right: 16.0),
+                  width: double.infinity,
+                  alignment: Alignment.topLeft,
+                  child: Text("Devices nearby",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                            height: 24 / 18
+                        )
+                  ),
+
+              ),
+              StreamBuilder<List<OracleAgent>>(
+                stream: Stream.periodic(Duration(seconds: 2))
+                    .asyncMap((_) =>
+                    FlutterBlue.instance.connectedDevices.then((devices) async {
+                      List<OracleAgent> filtered = [];
+                      for (BluetoothDevice device in devices) {
+                        var discovered = await device.discoverServices();
+                        if (discovered != null && discovered.map(
+                                (service) =>
+                                service.uuid.toString().toUpperCase()
+                        ).contains(
+                            DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID)) {
+                          try {
+                            filtered.add(await loadData(device));
+                            print("YESS OUR PAIRED DEVICE ADDED");
+                          } catch (e) {
+                            print("NOO OUR DEVICE WAS NOT ADDED ${e}");
+                            break;
+                          }
+                          ;
+                        }
+                      }
+                      return filtered;
+                    })
+                ),
+                initialData: [],
+                builder: (c, snapshot) =>
+                    Column(
+                      children: snapshot.data == null ? [] : snapshot.data
+                          .map((d) => OracleAgentCard(d)).toList(),
+                    ),
+              ),
+              StreamBuilder<List<OracleAgent>>(
+                stream: FlutterBlue.instance.scanResults.asyncMap((scan) async {
+                  List<OracleAgent> results = [];
+                  for (ScanResult result in scan) {
+                    print(result.advertisementData.serviceUuids.map((r) =>
+                        r.toUpperCase()));
+                    if (result.advertisementData.serviceUuids.map((r) =>
+                        r.toUpperCase())
+                        .contains(
+                        DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID)) {
+                      print("YESS OUR DEVICE ADDING");
+                      try {
+                        results.add(await loadData(result.device));
+                        print("YESS OUR DEVICE ADDED");
+                      } catch (e) {
+                        print("NOO OUR DEVICE WAS NOT ADDED ${e}");
+                        break;
+                      }
+                    }
+                  }
+                  return results;
+                }),
+                initialData: [],
+                builder: (c, snapshot) =>
+                    Column(
+                      children: snapshot.data == null ? [] : snapshot.data
+                          .map((d) => OracleAgentCard(d)).toList(),
+                    ),
+              ),
+              Container(
+                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                  child: Center(child:
+                  Column(children: [
+
+                    SizedBox(height: 32,
+                        width: 32,
+                        child: FittedBox(child: CircularProgressIndicator(
+                          backgroundColor: Colors_.primary,))),
+                    SizedBox(height: 16),
+                    Text(
+                      'Looking for devices',
+                      style: TextStyle(color: Colors_.grayscaleDarkest,),
+                      textAlign: TextAlign.center,
+                    ),
+                  ])
+                  )
+              ),
+            ],
+          );
+        });
+  }
+}
+
+
+class Search extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
     return <Widget>[
       IconButton(
-        icon: const Icon(Icons.search),
-        onPressed: _startSearch,
-      ),
-      IconButton(
-        icon: const Icon(Icons.add),
-        onPressed: _startPairing,
+        icon: Icon(Icons.close),
+        onPressed: () {
+          query = "";
+        },
       ),
     ];
   }
 
-  void _startSearch() {
-    ModalRoute.of(context)
-        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
-
-    setState(() {
-      _isSearching = true;
-    });
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
   }
 
-  void updateSearchQuery(String newQuery) {
-    setState(() {
-      searchQuery = newQuery;
-    });
+  String selectedResult = "";
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container(
+      child: Center(
+        child: Text(selectedResult),
+      ),
+    );
   }
 
-  void _stopSearching() {
-    _clearSearchQuery();
+  final List<String> listExample;
+  Search({this.listExample});
 
-    setState(() {
-      _isSearching = false;
-    });
+  List<String> recentList = ["Text 4", "Text 3"];
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> suggestionList = [];
+    query.isEmpty
+        ? suggestionList = recentList //In the true case
+        : suggestionList.addAll(listExample.where(
+      // In the false case
+          (element) => element.contains(query),
+    ));
+
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(
+            suggestionList[index],
+          ),
+          leading: query.isEmpty ? Icon(Icons.access_time) : SizedBox(),
+          onTap: (){
+            selectedResult = suggestionList[index];
+            showResults(context);
+          },
+        );
+      },
+    );
   }
-
-  void _clearSearchQuery() {
-    setState(() {
-      _searchQueryController.clear();
-      updateSearchQuery("");
-    });
-  }
-
-  void _startPairing() {
-    Navigator.pushNamed(context, "/devices/pairing");
-  }
-
 }
+

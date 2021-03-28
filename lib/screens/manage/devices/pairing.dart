@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:data/constants.dart';
 import 'package:data/services/device_pairing_service.dart';
+import 'package:data/widgets/dot_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
@@ -11,27 +12,96 @@ class OracleAgent {
   BluetoothDevice device;
   bool isPaired;
   String deviceId;
+  String name;
 
   String softwareVersion;
   String deviceType;
 
-  OracleAgent({this.isPaired = false, this.deviceId = "",
+  OracleAgent({this.isPaired = false, this.name="", this.deviceId = "",
     this.softwareVersion = "", this.deviceType="", this.device=null});
 }
+
+
 
 
 class OracleAgentCard extends StatelessWidget {
   OracleAgent agent;
 
-  OracleAgentCard(this.agent)
+  OracleAgentCard(this.agent) {}
+
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return;
-  }
+    void _onPressed() {
+      Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) =>
+                  DeviceScreen(device: agent.device)));
+    }
 
+    return GestureDetector(
+        onTap: _onPressed,
+
+        child: Card(
+          margin: EdgeInsets.only(left: 16, top: 16, right: 16),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          child: Column(children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Row(children: [
+                Text(this.agent.name,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        height: 24/18
+                    )
+                ),
+                Spacer(),
+                Text(this.agent.isPaired ? "Paired" : "Not paired",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14.0,
+                        height: 24/14
+                    )
+                ),
+                SizedBox(width: 6),
+                Align(
+                  alignment: Alignment.center,
+                  child: StreamBuilder<BluetoothDeviceState>(
+                    stream: agent.device.state,
+                    initialData: BluetoothDeviceState.disconnected,
+                    builder: (c, snapshot) {
+                      if (snapshot.data ==
+                          BluetoothDeviceState.connected) {
+                        return DotIndicator(color: Colors_.successPrimary);
+                      } else if (snapshot.data ==
+                          BluetoothDeviceState.disconnected) {
+                        return DotIndicator(color: Colors_.errorPrimary);
+                      }
+                      return DotIndicator(color: Colors_.warningPrimary);
+                    },
+                  ),
+                )
+
+              ]),
+            ),
+
+            Divider(height: 8,),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Row(children: [
+                Text("Type: ${this.agent.deviceType}"),
+                Spacer(),
+                Text("Software version: ${this.agent.softwareVersion}"),
+              ]),
+
+            )
+          ]),
+        ));
+  }
 }
+
 
 
 Future<OracleAgent> loadData(BluetoothDevice device) async {
@@ -42,7 +112,7 @@ Future<OracleAgent> loadData(BluetoothDevice device) async {
   List<BluetoothService> services = await device.discoverServices();
   //print("Got services ${services}");
 
-  var agent = OracleAgent();
+  var agent = OracleAgent(name: device.name);
 
   for (var service in services) {
     if (service.uuid.toString().toUpperCase() == DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID) {
@@ -479,7 +549,7 @@ class _DeviceSearchScreenState extends State<DeviceSearchScreen> {
               initialData: [],
               builder: (c, snapshot) => Column(
                 children: snapshot.data == null ? [] : snapshot.data
-                    .map((d) => ListTile(
+                    .map((d) => OracleAgentCard(d)/*ListTile(
                   title: Text(d.device.name),
                   subtitle: Text(d.device.id.toString()),
                   trailing: StreamBuilder<BluetoothDeviceState>(
@@ -499,7 +569,7 @@ class _DeviceSearchScreenState extends State<DeviceSearchScreen> {
                       return Text(snapshot.data.toString());
                     },
                   ),
-                )).toList(),
+                )*/).toList(),
               ),
             ),
             StreamBuilder<List<OracleAgent>>(
@@ -518,7 +588,7 @@ class _DeviceSearchScreenState extends State<DeviceSearchScreen> {
               initialData: [],
               builder: (c, snapshot) => Column(
                 children: snapshot.data == null ? [] : snapshot.data
-                    .map((d) => ListTile(
+                    .map((d) => OracleAgentCard(d)/*ListTile(
                   title: Text(d.device.name),
                   subtitle: Text(d.device.id.toString()),
                   trailing: StreamBuilder<BluetoothDeviceState>(
@@ -538,8 +608,23 @@ class _DeviceSearchScreenState extends State<DeviceSearchScreen> {
                       return Text(snapshot.data.toString());
                     },
                   ),
-                )).toList(),
+                )*/).toList(),
               ),
+            ),
+            Container(
+                margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                child: Center(child:
+                Column(children: [
+
+                  SizedBox(height:32, width: 32, child: FittedBox(child: CircularProgressIndicator(backgroundColor: Colors_.primary,))),
+                  SizedBox(height:16),
+                  Text(
+                    'Looking for devices',
+                    style: TextStyle(color: Colors_.grayscaleDarkest,),
+                    textAlign: TextAlign.center,
+                  ),
+                ])
+                )
             ),
           ],
         ),
