@@ -24,6 +24,9 @@ class _DatePickerState extends State<DatePicker> {
   TextEditingController dateController;
 
   _DatePickerState(name, {TextEditingController controller, this.date}) {
+    if (controller == null) {
+      controller = TextEditingController();
+    }
     datePickerName = name;
     controller.text = date.toIso8601String();
     dateController = controller;

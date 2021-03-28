@@ -54,7 +54,7 @@ class _ManageScreenState extends State<ManageScreen> {
           SizedBox(height: 12,),
 
           Expanded(child: GestureDetector(
-            onTap: () => Navigator.pushNamed(context, "/devices"),
+            onTap: () => Navigator.pushNamed(context, "/device"),
             child: Container(
 
               decoration: BoxDecoration(

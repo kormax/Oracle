@@ -1,5 +1,7 @@
 import 'package:data/constants/colors.dart';
 import 'package:data/entities/agent.dart';
+import 'package:data/entities/device.dart';
+import 'package:data/screens/manage/devices/device_edit.dart';
 import 'package:data/screens/manage/devices/pairing.dart';
 import 'package:data/widgets/button.dart';
 import 'package:data/widgets/dot_indicator.dart';
@@ -10,17 +12,20 @@ import 'package:flutter_blue/flutter_blue.dart';
 
 class DeviceScreen extends StatefulWidget {
   OracleAgent agent;
+  Device device;
 
-  DeviceScreen({this.agent});
+  DeviceScreen({this.agent, this.device = null});
 
   @override
-  _DeviceScreenState createState() => _DeviceScreenState(agent: this.agent);
+  _DeviceScreenState createState() =>
+      _DeviceScreenState(agent: this.agent, device: this.device);
 }
 
 class _DeviceScreenState extends State<DeviceScreen> {
   OracleAgent agent;
+  Device device;
 
-  _DeviceScreenState({this.agent});
+  _DeviceScreenState({this.agent, this.device});
 
   @override
   void initState() {
@@ -35,69 +40,123 @@ class _DeviceScreenState extends State<DeviceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[],
-        centerTitle: true,
-        title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text(agent.name),
-          SizedBox(width: 8),
-          StreamBuilder<BluetoothDeviceState>(
-            stream: agent.device.state,
-            initialData: BluetoothDeviceState.disconnected,
-            builder: (c, snapshot) {
-              if (snapshot.data ==
-                  BluetoothDeviceState.connected) {
-                return DotIndicator(color: Colors_.successPrimary);
-              } else if (snapshot.data ==
-                  BluetoothDeviceState.disconnected) {
-                return DotIndicator(color: Colors_.errorPrimary);
-              }
-              return DotIndicator(color: Colors_.warningPrimary);
-            },
-          ),
-        ])
-      ),
-      body:  StreamBuilder<BluetoothDeviceState>(
-        stream: agent.device.state,
-        initialData: BluetoothDeviceState.disconnected,
-        builder: (c, snapshot) {
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(16.0))
-                  ),
-                  child: Container(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                            Text("Name: ${agent.name}"),
-                            Text("Device type: ${agent.deviceType}"),
-                            Text("Software version: ${agent.softwareVersion}"),
-                        ],
-                      )
-                  )
+        appBar: AppBar(
+          actions: device == null ? [] : [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              tooltip: 'Edit',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                DeviceEditScreen(device: device),
+                )
+              ),
+            ),
+          ],
+          centerTitle: true,
+          title: Builder(builder: (context) {
+            if (agent != null) {
+              return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Text(device != null ? device.name : agent.name),
+                StreamBuilder<BluetoothDeviceState>(
+                  stream: agent.device.state,
+                  initialData: BluetoothDeviceState.disconnected,
+                  builder: (c, snapshot) {
+                    List<Widget> result = [SizedBox(width: 8)];
+                    if (snapshot.data == BluetoothDeviceState.connected) {
+                      result.add(DotIndicator(color: Colors_.successPrimary));
+                    } else if (snapshot.data ==
+                        BluetoothDeviceState.disconnected) {
+                      result.add(DotIndicator(color: Colors_.errorPrimary));
+                    } else {
+                      result.add(DotIndicator(color: Colors_.warningPrimary));
+                    }
+                    return Row(children: result);
+                  },
                 ),
-                SizedBox(height: 16,),
-                Button(
-                  text: "Pair",
-                  textColor: Colors_.enabledPrimary,
-                  color: Colors_.enabledSecondary,
-                  onPressed: () => snapshot.data == BluetoothDeviceState.disconnected ? null :
-                      Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DevicePairingScreen(device: agent.device)))
-                  ,),
-                //SelectField(possibleValues: ["Temperature", "Humidity", "Temperature & humridity"],)
+              ]);
+            } else {
+              return Text(device.name);
+            }
+          }),
+        ),
+        body: SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Builder(builder: (context) {
+                  return agent == null
+                      ? SizedBox.shrink()
+                      : StreamBuilder<BluetoothDeviceState>(
+                          stream: agent.device.state,
+                          initialData: BluetoothDeviceState.disconnected,
+                          builder: (c, snapshot) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0))),
+                                    child: Container(
+                                        alignment: Alignment.topLeft,
+
+                                        decoration: BoxDecoration(
+                                            color: Colors_.grayscaleWhite,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0)),
+                                          boxShadow: [BoxShadow(color: Colors_.grayscaleBlack)]
+                                        ),
+                                        padding: EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Name: ${agent.name}"),
+                                            Text(
+                                                "Device type: ${agent.deviceType}"),
+                                            Text(
+                                                "Software version: ${agent.softwareVersion}"),
+                                          ],
+                                        ))),
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                Button(
+                                  text: agent.isPaired ? "Already paired" : "Pair",
+                                  textColor: Colors_.enabledPrimary,
+                                  color: Colors_.enabledSecondary,
+                                  onPressed: () => snapshot.data ==
+                                          BluetoothDeviceState.disconnected
+                                      ? null
+                                      : Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DevicePairingScreen(
+                                                      device: agent.device))),
+                                ),
+                              ],
+                            );
+                          });
+                }),
+                Builder(builder: (context) {
+                  return device == null
+                      ? SizedBox.shrink()
+                      : Column(
+                          children: [
+                            Text("Name: ${device.name}"),
+                            Text(
+                                "Description: ${device.description}"),
+                            Text(
+                                "Manufacture date: ${device.manufactureDate}"),
+                            Text(
+                                "Model number: ${device.modelNumber}"),
+                          ],
+                        );
+
+                }),
               ],
-            )
-          );
-      }
-      )
-   );
+            )));
   }
 }

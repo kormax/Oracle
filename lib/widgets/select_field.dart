@@ -5,35 +5,36 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
-class SelectField<T> extends StatefulWidget {
-  List<T> possibleValues;
+class SelectField extends StatefulWidget {
+  TextEditingController controller;
+  List<String> possibleValues;
   String label;
-  SelectField({this.possibleValues, this.label=""});
+  SelectField({this.controller, this.possibleValues, this.label=""});
 
   @override
-  _SelectFieldState<T> createState() => _SelectFieldState<T>(possibleValues: this.possibleValues, label: this.label);
+  _SelectFieldState createState() => _SelectFieldState(controller: this.controller, possibleValues: this.possibleValues, label: this.label);
 }
 
-class _SelectFieldState<T> extends State<SelectField> {
-  List<T> possibleValues;
-  Stream<T> selectedValue;
-  StreamController<T> controller;
+class _SelectFieldState extends State<SelectField> {
+  TextEditingController controller;
+  List<String> possibleValues;
   String label;
 
-  _SelectFieldState({this.possibleValues, this.label = ""}) {
+  _SelectFieldState({TextEditingController controller, this.possibleValues, this.label = ""}) {
+    if (controller == null) {
+      this.controller = TextEditingController();
+    }
+    this.controller.text = this.possibleValues.length > 0 ? this.possibleValues[0] : "";
   }
 
   @override
   void initState(){
     super.initState();
-    controller = StreamController<T>();
-    selectedValue = controller.stream.asBroadcastStream();
   }
 
   @override
   void dispose() {
     super.dispose();
-    controller.close();
   }
 
   @override
@@ -53,11 +54,7 @@ class _SelectFieldState<T> extends State<SelectField> {
           ),
           SizedBox(
             height: 48,
-              child: StreamBuilder<T>(
-        stream: selectedValue,
-        initialData: possibleValues.length > 0 ? possibleValues[0] : "",
-        builder: (c, snapshot) {
-          return InputDecorator(
+              child: InputDecorator(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(horizontal: 8),
               border: OutlineInputBorder(
@@ -81,9 +78,9 @@ class _SelectFieldState<T> extends State<SelectField> {
             ),
             
             child: DropdownButtonHideUnderline( child:
-                DropdownButton<T>(
+                DropdownButton<String>(
                   isDense: true,
-                  value: snapshot.data,
+                  value: controller.text,
                   icon: const Icon(Icons.arrow_downward),
                   iconSize: 16,
                   elevation: 16,
@@ -96,12 +93,15 @@ class _SelectFieldState<T> extends State<SelectField> {
                     height: 2,
                     color: Colors.transparent,
                   ),
-                  onChanged: (T newValue) {
-                    controller.add(newValue);
+                  onChanged: (String newValue) {
+                    setState(() {
+                      controller.text = newValue.toString();
+                    });
+
                   },
                   items: possibleValues
-                      .map<DropdownMenuItem<T>>((T value) {
-                    return DropdownMenuItem<T>(
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value.toString(),
                         style: TextStyle(
@@ -113,9 +113,8 @@ class _SelectFieldState<T> extends State<SelectField> {
                   }).toList(),
                 )
             ),
-          );
-        }
-    ))]));
+          )
+    )]));
 
     }
 

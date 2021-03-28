@@ -1,10 +1,13 @@
 import 'package:data/entities/sensor_type.dart';
 
 class Device {
-  String serial;
-  String modelNumber;
   String name;
   String description;
+  String serial;
+  String modelNumber;
   DateTime manufactureDate;
+
+  String privateKey;
+
 }
 
