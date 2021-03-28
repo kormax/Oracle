@@ -14,7 +14,7 @@ class ApiUrls {
   }
 
   static Uri getTasksUrl({String taskId = ''}) {
-    return Uri.http(environment.taskUrl, "/tasks/$taskId");
+    return Uri.http(environment.taskUrl, "/tasks/${taskId.isEmpty ? '' : taskId + '/'}");
   }
 
   static Uri getTaskNotesUrl() {
