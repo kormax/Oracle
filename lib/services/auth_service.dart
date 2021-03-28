@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 
 class AuthService {
   static Future<Response> loginUser({String login, String password}) {
+    print({'email': login, 'password': password});
     return http.post(ApiUrls.getLoginUrl(),
         body: {'email': login, 'password': password});
   }

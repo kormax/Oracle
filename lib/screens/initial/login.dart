@@ -70,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () => Navigator.popAndPushNamed(context, "/signup"),
       );
 
+
   Widget LoginButton() {
     return Button(
       text: "Login",
@@ -77,6 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
       textColor: Colors_.grayscaleWhite,
       onPressed: () {
         Map<String, String> fromData = loginFormGroup.getFormGroupValue();
+
+        Navigator.popAndPushNamed(context, "/main");
 
         AuthService.loginUser(
             login: fromData['email'], password: fromData['password'])
@@ -93,11 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Map<String, dynamic> error = jsonDecode(response.body);
 
             error.forEach((key, value) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(value.toString()),
-                ),
-              );
             });
           }
         });
