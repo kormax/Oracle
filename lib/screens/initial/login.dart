@@ -79,8 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
       onPressed: () {
         Map<String, String> fromData = loginFormGroup.getFormGroupValue();
 
-        Navigator.popAndPushNamed(context, "/main");
-
         AuthService.loginUser(
             login: fromData['email'], password: fromData['password'])
             .then((Response response) {

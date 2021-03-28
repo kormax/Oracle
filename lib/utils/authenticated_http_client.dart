@@ -12,8 +12,6 @@ class AuthenticatedHttpClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers.putIfAbsent('content-type', () => 'application/json');
-
     if (token != null) {
       request.headers.putIfAbsent('Authorization', () => 'Bearer ${token.access}');
     }

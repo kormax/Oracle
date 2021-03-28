@@ -22,6 +22,8 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
   }
 
   void onGetAllTasks() {
+    print('onGetAllTasks');
+
     add(GetAllTasks());
   }
 
@@ -29,8 +31,6 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
   Stream<TasksState> mapEventToState(TasksEvent event) async* {
     if (event is GetAllTasks) {
       state.tasks = await _taskService.getTasks();
-
-      onGetAllTasks();
     }
 
     if (event is AddTask) {

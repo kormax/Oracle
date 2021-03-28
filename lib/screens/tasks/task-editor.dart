@@ -19,6 +19,8 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
   FormGroupUtil taskFormGroup =
   new FormGroupUtil(
       [
+        'creator_id',
+        'assignee_id',
         'name',
         'description',
         'priority',
@@ -56,16 +58,16 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
             children: <Widget>[
               SizedBox(height: 16),
               EntryField(
-                label: "Name",
+                label: "Creator id",
                 type: EntryFieldType.plaintext,
                 value: taskToEdit?.name?.toString(),
-                controller: taskFormGroup.getFormControl('name'),
+                controller: taskFormGroup.getFormControl('creator_id'),
               ),
               EntryField(
-                label: "Description",
+                label: "Assignee id",
                 type: EntryFieldType.plaintext,
                 value: taskToEdit?.description?.toString(),
-                controller: taskFormGroup.getFormControl('description'),
+                controller: taskFormGroup.getFormControl('assignee_id'),
               ),
               Divider(height: 32),
               EntryField(
