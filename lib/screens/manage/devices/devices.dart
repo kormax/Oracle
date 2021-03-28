@@ -273,7 +273,8 @@ class _LocalDevicesSectionBtEnabledState extends State<LocalDevicesSectionBtEnab
   @override
   void initState(){
     super.initState();
-    FlutterBlue.instance.startScan();
+    FlutterBlue.instance.setLogLevel(LogLevel.warning);
+    FlutterBlue.instance.startScan(allowDuplicates: false);
   }
 
   @override
@@ -336,8 +337,9 @@ class _LocalDevicesSectionBtEnabledState extends State<LocalDevicesSectionBtEnab
           stream: FlutterBlue.instance.scanResults.asyncMap((scan) async {
             List<OracleAgent> results = [];
             for (ScanResult result in scan) {
-              print(result.advertisementData.serviceUuids.map((r) =>
-                  r.toUpperCase()));
+              if (result.advertisementData.serviceUuids.length > 0) {
+                print(result.advertisementData.serviceUuids);
+              }
               if (result.advertisementData.serviceUuids.map((r) =>
                   r.toUpperCase())
                   .contains(

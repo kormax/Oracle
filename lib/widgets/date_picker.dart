@@ -5,11 +5,12 @@ import 'dart:async';
 
 class DatePicker extends StatefulWidget {
   final String datePickerName;
+  final DateTime defaultValue;
 
-  const DatePicker(this.datePickerName);
+  const DatePicker(this.datePickerName, {this.defaultValue});
 
   @override
-  _DatePickerState createState() => _DatePickerState(this.datePickerName);
+  _DatePickerState createState() => _DatePickerState(this.datePickerName, date: defaultValue);
 }
 
 class _DatePickerState extends State<DatePicker> {
@@ -17,7 +18,7 @@ class _DatePickerState extends State<DatePicker> {
 
   String datePickerName;
 
-  _DatePickerState(name) {
+  _DatePickerState(name, {this.date}) {
     datePickerName = name;
   }
 
