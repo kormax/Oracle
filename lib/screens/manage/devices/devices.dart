@@ -1,5 +1,6 @@
 import 'package:data/entities/agent.dart';
 import 'package:data/services/device_pairing_service.dart';
+import 'package:data/services/device_service.dart';
 import 'package:data/widgets/dot_indicator.dart';
 import 'package:data/widgets/search_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ Future<OracleAgent> loadData(BluetoothDevice device) async {
         switch(characteristic.uuid.toString().toUpperCase()) {
           case DevicePairingService.DEVICE_CH_IS_SETUP:
             var chars = await characteristic.read();
-            agent.isPaired = chars.length == 0 ? false : chars[0];
+            agent.isPaired = chars.length == 0 ? false : chars[0] > 0;
             break;
           case DevicePairingService.DEVICE_CH_SYSTEM_ID:
             agent.deviceId = String.fromCharCodes(await characteristic.read());
@@ -159,7 +160,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: Search(listExample: []));
+              showSearch(context: context, delegate: Search(proposal: DeviceService().getAllDevices()));
             },
             icon: Icon(Icons.search),
           )
@@ -420,11 +421,10 @@ class Search extends SearchDelegate {
       ),
     );
   }
-
   final List<String> listExample;
   Search({this.listExample});
 
-  List<String> recentList = ["Text 4", "Text 3"];
+  List<String> recentList = [];
 
   @override
   Widget buildSuggestions(BuildContext context) {

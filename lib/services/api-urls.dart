@@ -20,4 +20,22 @@ class ApiUrls {
   static Uri getTaskNotesUrl() {
     return Uri.http(environment.taskUrl, "/tasks/notes/");
   }
+
+  static Uri getDeviceRegistrationUrl() {
+    return Uri.http(environment.metricsUrl, "/metrics/devices/");
+  }
+
+  static Uri getDeviceByPublicId(String id) {
+    return Uri.http(environment.metricsUrl, "/metrics/devices/recognize/${id}/");
+  }
+
+  static Uri getDeviceByName() {
+    return Uri.http(environment.metricsUrl, "/metrics/devices/");
+  }
+
+  static Uri getDevices() {
+    return Uri.http(environment.metricsUrl, "/metrics/devices/");
+  }
+
+
 }

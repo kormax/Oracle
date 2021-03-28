@@ -4,10 +4,19 @@ class Device {
   String name;
   String description;
   String serial;
+  String type;
   String modelNumber;
   DateTime manufactureDate;
 
-  String privateKey;
+
+  Device({
+    this.name,
+    this.description,
+    this.serial,
+    this.type,
+    this.modelNumber,
+    this.manufactureDate
+});
 
 }
 

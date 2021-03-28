@@ -1,4 +1,6 @@
 import 'package:data/constants/colors.dart';
+import 'package:data/services/device_pairing_service.dart';
+import 'package:data/utils/form_group_util.dart';
 import 'package:data/widgets/button.dart';
 import 'package:data/widgets/date_picker.dart';
 import 'package:data/widgets/entry_field.dart';
@@ -18,8 +20,27 @@ class DevicePairingScreen extends StatefulWidget {
 
 class _DevicePairingScreenState extends State<DevicePairingScreen> {
   final BluetoothDevice device;
+  FormGroupUtil connectionFormGroup;
+  FormGroupUtil dataFormGroup;
 
-  _DevicePairingScreenState({this.device});
+  _DevicePairingScreenState({this.device}) {
+    this.connectionFormGroup = FormGroupUtil(
+        [
+          'wifi_ssid',
+          'wifi_password',
+          'wifi_security',
+          'gateway_url',
+        ]);
+
+    this.dataFormGroup = FormGroupUtil(
+        [
+          'name',
+          'description',
+          'manufacture_date',
+          'serial',
+          'type',
+        ]);
+  }
 
   @override
   void initState() {
@@ -58,10 +79,9 @@ class _DevicePairingScreenState extends State<DevicePairingScreen> {
                 ),
 
               ),
-              EntryField(label: "Wifi name"),
-              EntryField(label: "Wifi password", type: EntryFieldType.password),
-              SelectField(label: "Wifi security type", possibleValues: ["Auto", "WPA2", "WEP", "WPA", "TKIP"],),
-              EntryField(label: "Gateway server URL", value: "http://93.188.34.235:8002"),
+              EntryField(label: "Wifi name", controller: connectionFormGroup.getFormControl('wifi_ssid'),),
+              EntryField(label: "Wifi password", controller: connectionFormGroup.getFormControl('wifi_password'), type: EntryFieldType.password),
+              EntryField(label: "Gateway server URL", controller: connectionFormGroup.getFormControl('gateway_url'), value: "http://93.188.34.235:8002"),
 
               Divider(height: 8,),
               Container(
@@ -78,16 +98,27 @@ class _DevicePairingScreenState extends State<DevicePairingScreen> {
                 ),
 
               ),
-              EntryField(label: "Device name"),
-              EntryField(label: "Device description"),
-              DatePicker("Manufacture date", defaultValue: DateTime.now()),
-              SelectField(label: "Device sensor type", possibleValues: ["Temperature & humidity", "Todo :)"],),
+
+              EntryField(label: "Device name", controller: dataFormGroup.getFormControl("name")),
+              EntryField(label: "Device description", controller: dataFormGroup.getFormControl("description")),
+              EntryField(label: "Serial number", controller: dataFormGroup.getFormControl("serial")),
+              EntryField(label: "Type", controller: dataFormGroup.getFormControl("type")),
+              DatePicker("Manufacture date", controller: dataFormGroup.getFormControl("manufacture_date"),  defaultValue: DateTime.now()),
               SizedBox(height: 16),
               Button(
                 text: "Set up device",
                 textColor: Colors_.enabledPrimary,
                 color: Colors_.enabledSecondary,
-                onPressed: () { print("Se"); },
+                onPressed: () async {
+                  await DevicePairingService().registerDevice(
+                    device: this.device,
+                    name: dataFormGroup.getFormControl("name").text,
+                    description: dataFormGroup.getFormControl("description").text,
+                    serial: dataFormGroup.getFormControl("serial").text,
+                );
+                  Navigator.of(context).pop();
+
+                  },
               )
             ],
           )

@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:data/utils/authenticated_http_client.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:data/services/api-urls.dart';
 
 class DevicePairingService {
   static final DevicePairingService _singleton = DevicePairingService._internal();
@@ -15,19 +19,46 @@ class DevicePairingService {
 
 
   FlutterBlue flutterBlueInstance;
+  AuthenticatedHttpClient _httpClient;
 
   factory DevicePairingService() => _singleton;
 
   DevicePairingService._internal() {
-    this.flutterBlueInstance = FlutterBlue.instance;
+    _httpClient = AuthenticatedHttpClient();
   }
 
-  Stream<ScanResult> startScan() {
-    return flutterBlueInstance.scan();
-  }
 
-  Future<dynamic> stopScan() {
-    return flutterBlueInstance.stopScan();
-  }
+  Future<void> registerDevice({
+    @required BluetoothDevice device,
+    String name,
+    String description = "",
+    String type = "",
+    String serial = "",
+    DateTime manufactureDate
+  }) async {
+    manufactureDate = manufactureDate == null ? DateTime.now() : manufactureDate;
+    var res = await AuthenticatedHttpClient().post(ApiUrls.getDeviceRegistrationUrl(), body: jsonEncode(
+        {"name": name, "description": description, "serial": serial, "type": type, "manufacture_date": manufactureDate.toIso8601String()}
+        ));
 
+       dynamic response = jsonDecode(res.body);
+       var recognitionKey = response["recognition_key"];
+       var secretKey = response["secret_key"];
+       var services = await device.discoverServices();
+       for (var service in services) {
+         if (service.uuid.toString().toUpperCase() == DEVICE_SYSTEM_SERVICE_UUID) {
+           for (var char in service.characteristics) {
+             var charName = char.uuid.toString().toUpperCase();
+             if (charName == DEVICE_CH_IS_SETUP) {
+               await char.write([1]);
+             } else if (charName == DEVICE_CH_SYSTEM_ID) {
+               await char.write(recognitionKey.split('').map((s) => int.parse(s)));
+             }
+             // Secret keys and so on to be added later
+           }
+         }
+       }
+   }
 }
+
+
