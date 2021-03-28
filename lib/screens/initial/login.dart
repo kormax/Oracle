@@ -89,13 +89,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
             context.read<TokenBloc>().onSetToken(UserToken.fromJson(encodedResponse));
 
-            context.read<UserBloc>().onSetUser(User.registerFromJson(encodedResponse));
+            context.read<UserBloc>().onSetUser(User.loginFromJson(encodedResponse));
 
             Navigator.popAndPushNamed(context, "/main");
           } else {
             Map<String, dynamic> error = jsonDecode(response.body);
 
             error.forEach((key, value) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(value.toString()),
+                ),
+              );
             });
           }
         });

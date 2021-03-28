@@ -8,6 +8,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void onSetUser(User user) {
     print(user.email);
+    print(user.id);
 
     add(SetUser(user));
   }

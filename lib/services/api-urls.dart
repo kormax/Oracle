@@ -21,6 +21,14 @@ class ApiUrls {
     return Uri.http(environment.taskUrl, "/tasks/notes/");
   }
 
+  static Uri getWeeklyReportUrl() {
+    return Uri.http(environment.taskUrl, "/tasks/weekly-report/");
+  }
+
+  static Uri getStatusUrl() {
+    return Uri.http(environment.taskUrl, "/tasks/status/");
+  }
+
   static Uri getDeviceRegistrationUrl() {
     return Uri.http(environment.metricsUrl, "/metrics/devices/");
   }

@@ -45,6 +45,12 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       onGetAllTasks();
     }
 
+    if (event is UpdateTask) {
+      await _taskService.updateTask(event.value);
+
+      onGetAllTasks();
+    }
+
     yield TasksState(state.tasks);
   }
 }

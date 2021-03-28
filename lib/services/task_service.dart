@@ -17,7 +17,17 @@ class TaskService {
   }
 
   Future addTask(Task task) {
+    print(task.creator_id);
+
     return _httpClient.post(ApiUrls.getTasksUrl(), body: jsonEncode(task.taskAddToJson())).then((value) {
+      print(jsonDecode(value.body));
+    });
+  }
+
+  Future updateTask(Task task) {
+    print(task.id);
+
+    return _httpClient.patch(ApiUrls.getTasksUrl(taskId: task.id.toString()), body: jsonEncode(task.taskUpdateToJson())).then((value) {
       print(jsonDecode(value.body));
     });
   }

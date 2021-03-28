@@ -1,4 +1,5 @@
 import 'package:data/bloc/tasks.bloc.dart';
+import 'package:data/bloc/user.bloc.dart';
 import 'package:data/bloc_state/tasks.state.dart';
 import 'package:data/constants.dart';
 import 'package:data/entities/task.dart';
@@ -19,7 +20,6 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
   FormGroupUtil taskFormGroup =
   new FormGroupUtil(
       [
-        'creator_id',
         'assignee_id',
         'name',
         'description',
@@ -58,15 +58,9 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
             children: <Widget>[
               SizedBox(height: 16),
               EntryField(
-                label: "Creator id",
-                type: EntryFieldType.plaintext,
-                value: taskToEdit?.name?.toString(),
-                controller: taskFormGroup.getFormControl('creator_id'),
-              ),
-              EntryField(
                 label: "Assignee id",
                 type: EntryFieldType.plaintext,
-                value: taskToEdit?.description?.toString(),
+                value: taskToEdit?.assignee_id?.toString(),
                 controller: taskFormGroup.getFormControl('assignee_id'),
               ),
               Divider(height: 32),
@@ -116,16 +110,23 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
                       textColor: Colors_.grayscaleWhite,
                       onPressed: () {
                         if (taskToEdit?.id == null) {
-                          print(taskFormGroup.getFormGroupValue()['due_date']);
+                          print(context.read<UserBloc>().state.user.id);
 
                           context.read<TasksBloc>().onAddTask(
-                              Task.taskAddFromJson(taskFormGroup.getFormGroupValue()));
+                              Task.taskAddFromJson({
+                                "creator_id": context.read<UserBloc>().state.user.id.toString(),
+                                ...taskFormGroup.getFormGroupValue()
+                              }));
                         } else {
                           context.read<TasksBloc>().onUpdateTask(
-                              Task.fromJson(taskFormGroup.getFormGroupValue()));
+                              Task.taskAddFromJson({
+                                'id': taskToEdit?.id,
+                                'creator_id': context.read<UserBloc>().state.user.id.toString(),
+                                ...taskFormGroup.getFormGroupValue()
+                              }));
                         }
 
-                        // Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                     ),
                   )

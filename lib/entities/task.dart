@@ -30,16 +30,20 @@ class Task {
         completion_date = DateTime.parse(json['completion_date']),
         grade = json['grade'];
 
-  Task.taskAddFromJson(Map<String, dynamic> json)
-      : priority = int.tryParse(json['priority']),
-        name = json['name'],
-        description = json['description'],
-        status = json['status'],
-        due_date = DateTime.parse(json['due_date']),
-        completion_date = DateTime.parse(json['completion_date']),
-        grade = double.tryParse(json['grade']),
-        creator_id = int.tryParse(json['creator_id']),
-        assignee_id = int.tryParse(json['assignee_id']);
+  Task.taskAddFromJson(Map<String, dynamic> json) {
+    print(json);
+
+    id = json['id'];
+    priority = int.tryParse(json['priority']);
+    name = json['name'];
+    description = json['description'];
+    status = json['status'];
+    due_date = DateTime.parse(json['due_date']);
+    completion_date = DateTime.parse(json['completion_date']);
+    grade = double.tryParse(json['grade']);
+    creator_id = int.tryParse(json['creator_id']);
+    assignee_id = int.tryParse(json['assignee_id']);
+  }
 
   Map<String, dynamic> taskAddToJson() {
     return {
@@ -52,6 +56,16 @@ class Task {
       "status": status.toString(),
       "grade": grade.toString(),
       "assignee_id": assignee_id.toString()
+    };
+  }
+
+  Map<String, dynamic> taskUpdateToJson() {
+    return {
+      "name": name.toString(),
+      "priority": priority.toString(),
+      "description": description.toString(),
+      "grade": grade.toString(),
+      "assignee_id": assignee_id
     };
   }
 }

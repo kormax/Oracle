@@ -422,7 +422,7 @@ class Search extends SearchDelegate {
     );
   }
   final List<String> listExample;
-  Search({this.listExample});
+  Search({this.listExample, proposal});
 
   List<String> recentList = [];
 

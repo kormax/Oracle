@@ -6,6 +6,7 @@ import 'package:data/bloc/user.bloc.dart';
 import 'package:data/constants.dart';
 import 'package:data/entities/user.dart';
 import 'package:data/entities/user_token.dart';
+import 'package:data/utils/authenticated_http_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:data/services/auth_service.dart';
 import 'package:data/utils/form_group_util.dart';
@@ -83,6 +84,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             AuthService.loginUser(password: newUser['password'], login: newUser['email'])
                 .then((value) {
               Map<String, dynamic> encodedResponse = jsonDecode(response.body);
+
+              AuthenticatedHttpClient.token = UserToken.fromJson(encodedResponse);
 
               context.read<TokenBloc>().onSetToken(UserToken.fromJson(encodedResponse));
 
