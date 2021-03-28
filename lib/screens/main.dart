@@ -1,3 +1,4 @@
+import 'package:data/bloc/tasks.bloc.dart';
 import 'package:data/bloc/token.bloc.dart';
 import 'package:data/bloc/user.bloc.dart';
 import "package:data/constants.dart";
@@ -27,7 +28,12 @@ class MainScreen extends StatelessWidget {
         BlocProvider<TokenBloc>(
           create: (_) => TokenBloc(),
         ),
-        BlocProvider<UserBloc>(create: (_) => UserBloc()),
+        BlocProvider<UserBloc>(
+            create: (_) => UserBloc()
+        ),
+        BlocProvider<TasksBloc>(
+            create: (_) => TasksBloc()
+        ),
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

@@ -6,19 +6,26 @@ import 'dart:async';
 class DatePicker extends StatefulWidget {
   final String datePickerName;
 
-  const DatePicker(this.datePickerName);
+  TextEditingController dateController;
+
+  DatePicker(this.datePickerName, {TextEditingController controller}) {
+    dateController = controller;
+  }
 
   @override
-  _DatePickerState createState() => _DatePickerState(this.datePickerName);
+  _DatePickerState createState() => _DatePickerState(this.datePickerName, controller: dateController);
 }
 
 class _DatePickerState extends State<DatePicker> {
   DateTime date = DateTime.now();
 
   String datePickerName;
+  TextEditingController dateController;
 
-  _DatePickerState(name) {
+  _DatePickerState(name, {TextEditingController controller}) {
     datePickerName = name;
+    controller.text = date.toIso8601String();
+    dateController = controller;
   }
 
   Future _selectDate(BuildContext context) async {
@@ -31,6 +38,8 @@ class _DatePickerState extends State<DatePicker> {
     if (picker != null) {
       setState(() {
         date = picker;
+
+        dateController.text = date.toIso8601String();
       });
     }
   }

@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:data/bloc/token.bloc.dart';
 import 'package:data/bloc/user.bloc.dart';
-import 'package:data/bloc_state/user_token.state.dart';
 import 'package:data/constants.dart';
 import 'package:data/entities/user.dart';
 import 'package:data/entities/user_token.dart';
 import 'package:data/services/auth_service.dart';
+import 'package:data/utils/authenticated_http_client.dart';
 import 'package:data/utils/form_group_util.dart';
 import 'package:data/widgets/button.dart';
 import 'package:data/widgets/entry_field.dart';
@@ -87,6 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
           if (response.statusCode == HttpStatus.ok) {
             Map<String, dynamic> encodedResponse = jsonDecode(response.body);
 
+            AuthenticatedHttpClient.token = UserToken.fromJson(encodedResponse);
+
             context.read<TokenBloc>().onSetToken(UserToken.fromJson(encodedResponse));
 
             context.read<UserBloc>().onSetUser(User.registerFromJson(encodedResponse));
@@ -100,44 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         });
       },
-    );
-  }
-}
-
-class CounterView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      appBar: AppBar(title: const Text('Counter')),
-      body: Center(
-        child: BlocBuilder<TokenBloc, UserTokenState>(
-          builder: (context, state) {
-            return Text('${state.token.refresh}', style: textTheme.headline2);
-          },
-        ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            key: const Key('counterView_increment_floatingActionButton'),
-            child: const Icon(Icons.add),
-            onPressed: () => context
-                .read<TokenBloc>()
-                .onSetToken(UserToken('refresh', 'access')),
-          ),
-          const SizedBox(height: 8),
-          FloatingActionButton(
-            key: const Key('counterView_decrement_floatingActionButton'),
-            child: const Icon(Icons.remove),
-            onPressed: () => context
-                .read<TokenBloc>()
-                .onSetToken(UserToken('Rrefresh', 'Aaccess')),
-          ),
-        ],
-      ),
     );
   }
 }

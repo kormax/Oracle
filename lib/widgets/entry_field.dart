@@ -8,7 +8,7 @@ class EntryField extends StatelessWidget {
   final EntryFieldType type;
   final String value;
 
-  var textController = TextEditingController();
+  TextEditingController textController = TextEditingController();
 
   bool formError = false;
 

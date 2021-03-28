@@ -92,7 +92,7 @@ class TaskPreview extends StatelessWidget {
                             height: 8,
                           ),
                           Text(
-                            '${new DateFormat('d MMM y').format(task.dueDate)} - ${new DateFormat('d MMM y').format(task.completionDate)}',
+                            '${new DateFormat('d MMM y').format(task.due_date)} - ${new DateFormat('d MMM y').format(task.completion_date)}',
                             style: TextStyle(fontSize: 16),
                           ),
                         ],

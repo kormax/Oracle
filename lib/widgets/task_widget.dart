@@ -40,7 +40,7 @@ class TaskWidget extends StatelessWidget {
                         )
                     ),
                     Spacer(),
-                    Text(this.task.dueDate.toString(),
+                    Text(this.task.due_date.toString(),
                         style: const TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 14.0,

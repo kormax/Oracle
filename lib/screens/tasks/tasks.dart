@@ -1,7 +1,10 @@
+import 'package:data/bloc/tasks.bloc.dart';
+import 'package:data/bloc_state/tasks.state.dart';
 import 'package:data/services/task_service.dart';
 import 'package:data/widgets/task_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:data/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TasksScreen extends StatefulWidget {
   @override
@@ -9,11 +12,11 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  TaskService taskService;
 
   @override
   void initState() {
-    this.taskService = TaskService();
+    context.read<TasksBloc>().onGetAllTasks();
+
     super.initState();
   }
 
@@ -26,7 +29,35 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: FutureBuilder(
+        child: BlocBuilder<TasksBloc, TasksState>(
+          builder: (context, state) {
+            if (state?.tasks?.isEmpty) {
+              return Container(
+                child: Text('Loading'),
+              );
+            }
+            return ListView.builder(
+              padding: EdgeInsets.only(bottom: 16),
+              itemCount: state?.tasks?.length ?? 0,
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return Dismissible(
+                    key: Key(state.tasks[index].name),
+                    onDismissed: (direction) {
+                      setState(() {
+                        context.read<TasksBloc>().onDeleteTask(state.tasks[index]);
+                      });
+                    },
+                    child: TaskWidget(
+                      task: state.tasks[index],
+                    ));
+              },
+            );
+          },
+        ),
+
+        /*child: FutureBuilder(
           future: this.taskService.getTasks(),
           builder: (context, projectSnap) {
             if (projectSnap.data == null) {
@@ -53,7 +84,7 @@ class _TasksScreenState extends State<TasksScreen> {
               },
             );
           },
-        ),
+        ),*/
       ),
       floatingActionButton: FloatingActionButton(
           elevation: 0.0,

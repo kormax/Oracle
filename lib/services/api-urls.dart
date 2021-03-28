@@ -8,4 +8,16 @@ class ApiUrls {
   static Uri getRegisterUrl() {
     return Uri.http(environment.authUrl, "/register/");
   }
+
+  static Uri getRefreshTokenUrl() {
+    return Uri.http(environment.authUrl, "/token/refresh/");
+  }
+
+  static Uri getTasksUrl({String taskId = ''}) {
+    return Uri.http(environment.taskUrl, "/tasks/$taskId");
+  }
+
+  static Uri getTaskNotesUrl() {
+    return Uri.http(environment.taskUrl, "/tasks/notes/");
+  }
 }

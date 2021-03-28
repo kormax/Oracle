@@ -7,6 +7,7 @@ class TokenBloc extends Bloc<TokenEvent, UserTokenState> {
   TokenBloc() : super(UserTokenState.initial());
 
   void onSetToken(UserToken token) {
+    print(token.refresh);
     print(token.access);
 
     add(SetToken(token));

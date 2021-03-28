@@ -1,4 +1,3 @@
-import 'package:data/entities/user.dart';
 import 'package:data/services/api-urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -11,8 +10,10 @@ class AuthService {
   }
 
   static Future<Response> registerUser(dynamic user) {
-    print(user);
-
     return http.post(ApiUrls.getRegisterUrl(), body: user);
+  }
+
+  static Future<Response> refreshToken(String refresh) {
+    return http.post(ApiUrls.getRefreshTokenUrl(), body: {'refresh': refresh});
   }
 }
