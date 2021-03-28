@@ -29,14 +29,20 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
   Stream<TasksState> mapEventToState(TasksEvent event) async* {
     if (event is GetAllTasks) {
       state.tasks = await _taskService.getTasks();
+
+      onGetAllTasks();
     }
 
     if (event is AddTask) {
       await _taskService.addTask(event.value);
+
+      onGetAllTasks();
     }
 
     if (event is DeleteTask) {
       await _taskService.deleteTask(event.value);
+
+      onGetAllTasks();
     }
 
     yield TasksState(state.tasks);

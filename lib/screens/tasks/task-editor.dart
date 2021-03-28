@@ -69,6 +69,19 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
               ),
               Divider(height: 32),
               EntryField(
+                label: "Name",
+                type: EntryFieldType.plaintext,
+                value: taskToEdit?.name?.toString(),
+                controller: taskFormGroup.getFormControl('name'),
+              ),
+              EntryField(
+                label: "Description",
+                type: EntryFieldType.plaintext,
+                value: taskToEdit?.description?.toString(),
+                controller: taskFormGroup.getFormControl('description'),
+              ),
+              Divider(height: 32),
+              EntryField(
                 label: "Priority",
                 type: EntryFieldType.integer,
                 value: taskToEdit?.priority?.toString(),
