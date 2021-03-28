@@ -22,6 +22,8 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
   }
 
   void onGetAllTasks() {
+    print('onGetAllTasks');
+
     add(GetAllTasks());
   }
 
@@ -33,10 +35,14 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
 
     if (event is AddTask) {
       await _taskService.addTask(event.value);
+
+      onGetAllTasks();
     }
 
     if (event is DeleteTask) {
       await _taskService.deleteTask(event.value);
+
+      onGetAllTasks();
     }
 
     yield TasksState(state.tasks);

@@ -14,7 +14,7 @@ class DatePicker extends StatefulWidget {
   }
 
   @override
-  _DatePickerState createState() => _DatePickerState(this.datePickerName, controller: dateController, date: defaultValue);
+  _DatePickerState createState() => _DatePickerState(this.datePickerName, controller: dateController, customDate: defaultValue);
 }
 
 class _DatePickerState extends State<DatePicker> {
@@ -23,11 +23,13 @@ class _DatePickerState extends State<DatePicker> {
   String datePickerName;
   TextEditingController dateController;
 
-  _DatePickerState(name, {TextEditingController controller, this.date}) {
+  _DatePickerState(name, {TextEditingController controller, DateTime customDate}) {
     if (controller == null) {
       controller = TextEditingController();
     }
+
     datePickerName = name;
+    date = customDate != null ? customDate : date;
     controller.text = date.toIso8601String();
     dateController = controller;
   }

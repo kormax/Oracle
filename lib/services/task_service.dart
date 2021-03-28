@@ -4,7 +4,6 @@ import 'package:data/entities/task.dart';
 import 'package:data/services/api-urls.dart';
 import 'package:data/utils/authenticated_http_client.dart';
 import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 
 class TaskService {
   AuthenticatedHttpClient _httpClient = new AuthenticatedHttpClient();
@@ -18,10 +17,8 @@ class TaskService {
   }
 
   Future addTask(Task task) {
-    print(task.taskAddToJson());
-
-    return http.post(ApiUrls.getTasksUrl(), body: task.taskAddToJson()).then((value) {
-      print(value.body);
+    return _httpClient.post(ApiUrls.getTasksUrl(), body: jsonEncode(task.taskAddToJson())).then((value) {
+      print(jsonDecode(value.body));
     });
   }
 

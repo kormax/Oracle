@@ -34,7 +34,9 @@ class Task {
         status = json['status'],
         due_date = DateTime.parse(json['due_date']),
         completion_date = DateTime.parse(json['completion_date']),
-        grade = double.tryParse(json['grade']);
+        grade = double.tryParse(json['grade']),
+        creator_id = int.tryParse(json['creator_id']),
+        assignee_id = int.tryParse(json['assignee_id']);
 
   Map<String, dynamic> taskAddToJson() {
     return {
