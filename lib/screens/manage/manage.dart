@@ -30,17 +30,13 @@ class _ManageScreenState extends State<ManageScreen> {
          Expanded(child:
              GestureDetector(
                onTap: () => Navigator.pushNamed(context, "/data"),
-               child:  Card(child:
-                Container(
+               child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     color: Colors_.infoPrimary,
-
                   ),
 
-
               child: Stack(children: [
-
                 Container(
                   width: double.infinity,
                   height: double.infinity,
@@ -52,15 +48,14 @@ class _ManageScreenState extends State<ManageScreen> {
                 Center(child: Text("Data", style: TextStyle(color: Colors_.grayscaleWhite, fontSize: 28), )),
 
               ])
-            ),
-          ),
+              ),
              )
          ),
+          SizedBox(height: 12,),
 
           Expanded(child: GestureDetector(
             onTap: () => Navigator.pushNamed(context, "/devices"),
-            child: Card(child:
-            Container(
+            child: Container(
 
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -81,7 +76,6 @@ class _ManageScreenState extends State<ManageScreen> {
                 ])
               ),
             ),
-            )
           )
         ],
       )

@@ -4,7 +4,6 @@ import "package:data/constants.dart";
 import 'package:data/screens/initial/signup.dart';
 import 'package:data/screens/manage/data/data-editor.dart';
 import 'package:data/screens/manage/data/data.dart';
-import 'package:data/screens/manage/devices/pairing.dart';
 import 'package:data/screens/profile.dart';
 import 'package:data/screens/settings.dart';
 import 'package:data/screens/tasks/task-editor.dart';
@@ -66,7 +65,6 @@ class MainScreen extends StatelessWidget {
             "/data": (context) => DataScreen(),
             "/data/edit": (context) => DataEditorScreen(),
             "/devices": (context) => DevicesScreen(),
-            "/devices/pairing": (context) => PairingScreen()
           }),
     );
   }

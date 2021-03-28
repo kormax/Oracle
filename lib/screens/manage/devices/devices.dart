@@ -1,3 +1,4 @@
+import 'package:data/entities/agent.dart';
 import 'package:data/services/device_pairing_service.dart';
 import 'package:data/widgets/dot_indicator.dart';
 import 'package:data/widgets/search_scaffold.dart';
@@ -5,18 +6,9 @@ import 'package:flutter/material.dart';
 import "package:data/constants.dart";
 import 'package:flutter_blue/flutter_blue.dart';
 
-class OracleAgent {
-  BluetoothDevice device;
-  bool isPaired;
-  String deviceId;
-  String name;
+import 'device.dart';
 
-  String softwareVersion;
-  String deviceType;
 
-  OracleAgent({this.isPaired = false, this.name="", this.deviceId = "",
-    this.softwareVersion = "", this.deviceType="", this.device=null});
-}
 
 
 
@@ -24,16 +16,16 @@ class OracleAgent {
 class OracleAgentCard extends StatelessWidget {
   OracleAgent agent;
 
-  OracleAgentCard(this.agent) {}
+  OracleAgentCard(this.agent);
 
 
   @override
   Widget build(BuildContext context) {
     void _onPressed() {
-      /*Navigator.of(context).push(
+      Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) =>
-                  DeviceScreen(device: agent.device)));*/
+                  DeviceScreen(agent: this.agent)));
     }
 
     return GestureDetector(
@@ -223,16 +215,58 @@ class DeviceSuggestions extends StatelessWidget {
 }
 
 
-class LocalDevicesSection extends StatefulWidget {
+class LocalDevicesSection extends StatelessWidget {
   @override
-  _LocalDevicesSectionState createState() => _LocalDevicesSectionState();
+  Widget build(BuildContext context) {
+    return StreamBuilder<BluetoothState>(
+        stream: FlutterBlue.instance.state,
+        initialData: BluetoothState.unknown,
+        builder: (c, snapshot) {
+          final state = snapshot.data;
+          if (state == BluetoothState.on) {
+            return LocalDevicesSectionBtEnabled();
+          }
+          return LocalDevicesSectionBtDisabled();
+        }
+    );
+  }
+}
+
+class LocalDevicesSectionBtDisabled extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            Icons.bluetooth_disabled_rounded,
+            size: 64.0,
+            color: Colors_.grayscaleDark,
+          ),
+          Text(
+            'Please turn on bluetooth \n to discover & view local devices',
+            style: TextStyle(color: Colors_.grayscaleDarkest,),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LocalDevicesSectionBtEnabled extends StatefulWidget {
+  @override
+  _LocalDevicesSectionBtEnabledState createState() => _LocalDevicesSectionBtEnabledState();
 }
 
 
-class _LocalDevicesSectionState extends State<LocalDevicesSection> {
+class _LocalDevicesSectionBtEnabledState extends State<LocalDevicesSectionBtEnabled> {
   DevicePairingService devicePairingService;
 
-  _LocalDevicesSectionState() {
+  _LocalDevicesSectionBtEnabledState() {
     this.devicePairingService = DevicePairingService();
   }
 
@@ -250,130 +284,103 @@ class _LocalDevicesSectionState extends State<LocalDevicesSection> {
 
   @override
   Widget build(BuildContext context) {
-    return  StreamBuilder<BluetoothState>(
-        stream: FlutterBlue.instance.state,
-        initialData: BluetoothState.unknown,
-        builder: (c, snapshot) {
-          final state = snapshot.data;
-          if (state != BluetoothState.on) {
-            return Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(
-                    Icons.bluetooth_disabled_rounded,
-                    size: 64.0,
-                    color: Colors_.grayscaleDark,
-                  ),
-                  Text(
-                    'Please turn on bluetooth \n to discover & view local devices',
-                    style: TextStyle(color: Colors_.grayscaleDarkest,),
-                    textAlign: TextAlign.center,
-                  ),
-                 ],
-              ),
-            );
-          }
-          return Column(
-            children: <Widget>[
-              Container(
-                  padding: const EdgeInsets.only(
-                      top: 16.0, left: 16.0, right: 16.0),
-                  width: double.infinity,
-                  alignment: Alignment.topLeft,
-                  child: Text("Devices nearby",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                            height: 24 / 18
-                        )
-                  ),
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.only(
+              top: 16.0, left: 16.0, right: 16.0),
+          width: double.infinity,
+          alignment: Alignment.topLeft,
+          child: Text("Devices nearby",
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                  height: 24 / 18
+              )
+          ),
 
-              ),
-              StreamBuilder<List<OracleAgent>>(
-                stream: Stream.periodic(Duration(seconds: 2))
-                    .asyncMap((_) =>
-                    FlutterBlue.instance.connectedDevices.then((devices) async {
-                      List<OracleAgent> filtered = [];
-                      for (BluetoothDevice device in devices) {
-                        var discovered = await device.discoverServices();
-                        if (discovered != null && discovered.map(
-                                (service) =>
-                                service.uuid.toString().toUpperCase()
-                        ).contains(
-                            DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID)) {
-                          try {
-                            filtered.add(await loadData(device));
-                            print("YESS OUR PAIRED DEVICE ADDED");
-                          } catch (e) {
-                            print("NOO OUR DEVICE WAS NOT ADDED ${e}");
-                            break;
-                          }
-                          ;
-                        }
-                      }
-                      return filtered;
-                    })
-                ),
-                initialData: [],
-                builder: (c, snapshot) =>
-                    Column(
-                      children: snapshot.data == null ? [] : snapshot.data
-                          .map((d) => OracleAgentCard(d)).toList(),
-                    ),
-              ),
-              StreamBuilder<List<OracleAgent>>(
-                stream: FlutterBlue.instance.scanResults.asyncMap((scan) async {
-                  List<OracleAgent> results = [];
-                  for (ScanResult result in scan) {
-                    print(result.advertisementData.serviceUuids.map((r) =>
-                        r.toUpperCase()));
-                    if (result.advertisementData.serviceUuids.map((r) =>
-                        r.toUpperCase())
-                        .contains(
-                        DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID)) {
-                      print("YESS OUR DEVICE ADDING");
-                      try {
-                        results.add(await loadData(result.device));
-                        print("YESS OUR DEVICE ADDED");
-                      } catch (e) {
-                        print("NOO OUR DEVICE WAS NOT ADDED ${e}");
-                        break;
-                      }
+        ),
+        StreamBuilder<List<OracleAgent>>(
+          stream: Stream.periodic(Duration(seconds: 2))
+              .asyncMap((_) =>
+              FlutterBlue.instance.connectedDevices.then((devices) async {
+                List<OracleAgent> filtered = [];
+                for (BluetoothDevice device in devices) {
+                  var discovered = await device.discoverServices();
+                  if (discovered != null && discovered.map(
+                          (service) =>
+                          service.uuid.toString().toUpperCase()
+                  ).contains(
+                      DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID)) {
+                    try {
+                      filtered.add(await loadData(device));
+                      print("YESS OUR PAIRED DEVICE ADDED");
+                    } catch (e) {
+                      print("NOO OUR DEVICE WAS NOT ADDED ${e}");
+                      break;
                     }
+                    ;
                   }
-                  return results;
-                }),
-                initialData: [],
-                builder: (c, snapshot) =>
-                    Column(
-                      children: snapshot.data == null ? [] : snapshot.data
-                          .map((d) => OracleAgentCard(d)).toList(),
-                    ),
+                }
+                return filtered;
+              })
+          ),
+          initialData: [],
+          builder: (c, snapshot) =>
+              Column(
+                children: snapshot.data == null ? [] : snapshot.data
+                    .map((d) => OracleAgentCard(d)).toList(),
               ),
-              Container(
-                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                  child: Center(child:
-                  Column(children: [
+        ),
+        StreamBuilder<List<OracleAgent>>(
+          stream: FlutterBlue.instance.scanResults.asyncMap((scan) async {
+            List<OracleAgent> results = [];
+            for (ScanResult result in scan) {
+              print(result.advertisementData.serviceUuids.map((r) =>
+                  r.toUpperCase()));
+              if (result.advertisementData.serviceUuids.map((r) =>
+                  r.toUpperCase())
+                  .contains(
+                  DevicePairingService.DEVICE_SYSTEM_SERVICE_UUID)) {
+                print("YESS OUR DEVICE ADDING");
+                try {
+                  results.add(await loadData(result.device));
+                  print("YESS OUR DEVICE ADDED");
+                } catch (e) {
+                  print("NOO OUR DEVICE WAS NOT ADDED ${e}");
+                  break;
+                }
+              }
+            }
+            return results;
+          }),
+          initialData: [],
+          builder: (c, snapshot) =>
+              Column(
+                children: snapshot.data == null ? [] : snapshot.data
+                    .map((d) => OracleAgentCard(d)).toList(),
+              ),
+        ),
+        Container(
+            margin: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+            child: Center(child:
+            Column(children: [
 
-                    SizedBox(height: 32,
-                        width: 32,
-                        child: FittedBox(child: CircularProgressIndicator(
-                          backgroundColor: Colors_.primary,))),
-                    SizedBox(height: 16),
-                    Text(
-                      'Looking for devices',
-                      style: TextStyle(color: Colors_.grayscaleDarkest,),
-                      textAlign: TextAlign.center,
-                    ),
-                  ])
-                  )
+              SizedBox(height: 32,
+                  width: 32,
+                  child: FittedBox(child: CircularProgressIndicator(
+                    backgroundColor: Colors_.primary,))),
+              SizedBox(height: 16),
+              Text(
+                'Looking for devices',
+                style: TextStyle(color: Colors_.grayscaleDarkest,),
+                textAlign: TextAlign.center,
               ),
-            ],
-          );
-        });
+            ])
+            )
+        ),
+      ],
+    );
   }
 }
 
